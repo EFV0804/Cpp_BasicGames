@@ -9,76 +9,90 @@ using std::array;
 using std::string;
 using std::srand;
 
-
-void boardInit(array<char, 9>boardValues);
-void boardDisplay(array<char,9>boardValuesUpdated);
-array<char,9> boardUpdate(int playerTurn, int playerInput, array<char, 9>boardValues);
-
-
-//char boardUpdate(int playerTurn, int playerInput, char boardValues[8]);
+void instructions();
+void boardInit(char boardValues); 
+void boardDisplay(char pBoardValues); 
+char boardUpdate(int playerTurn, int playerInput, char boardValues);
 
 int main(int argc, char** argv)
 {
-	//display board
 
-	array<char, 9>boardValues{'0','1', '2', '3', '4', '5', '6', '7', '8'};
+	char boardValues[9] = { '0','1', '2', '3', '4', '5', '6', '7', '8' };
+	//char* pBoardValues;
+	//pBoardValues = &boardValues[0];
+
 
 	boardInit(boardValues);
+	instructions();
 
-	int playerTurn = true; // if true player 1 if playing, ask for input, else AI
+
+	int playerTurn = 1; // if true player 1 if playing, ask for input, else AI
 	int playerInput;
-	cin >> playerInput; //int that we will use an array index
+	bool success = false;
+	bool quit = false;
+
+	while (success == false || quit == false)
+	{
+
+		if (playerTurn == 1 )
+		{
+			cout << "Player 1, choose a spot to mark: " << endl;
+			cin >> playerInput;
+
+			boardDisplay(*boardValues);
+			playerTurn = 2;
+		}
+		else
+		{
+			cout << "Player 2, choose a spot to mark: " << endl;
+			cin >> playerInput;
+			boardDisplay(*boardValues);
+			playerTurn = 1;
+		}
+
+	}
 	
-	boardValues = boardUpdate(playerTurn, playerInput, boardValues);
-
-	boardDisplay(boardValues);
-
-
-
-	//boardGame update raplacing values in the array (identified by player input passed as index), by "o" or "x"
-	//boardUpdate(playerTurn, playerInput, boardValues[]);
-
-
 
 }
 
-
-void boardInit(array<char,9>boardValues)
+void instructions()
 {
-	cout << " " << boardValues[0] << " " << "|" << " " << boardValues[1] << " " << "|" << " " << boardValues[2] << " " << endl;
+	cout << "TicTacToe rules: " << endl;
+	cout << "The goal is to mark 3 contiguous spots horizontally, vertically or diagonally." << endl;
+	cout << "Each spot is identified by a number between 0 and 9" << endl;
+	cout << "To mark a spot, enter the corresponding number when prompted." << endl;
+	cout << "The starting player is chosen at random. The players alternate turns." << endl;
+}
+void boardInit(char boardValues)
+{
+	cout << " " << boardValues[0] << " " << "|" << " " <<boardValues[1] << " " << "|" << " " << boardValues[2] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
 	cout << " " << boardValues[3] << " " << "|" << " " << boardValues[4] << " " << "|" << " " << boardValues[5] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
 	cout << " " << boardValues[6] << " " << "|" << " " << boardValues[7] << " " << "|" << " " << boardValues[8] << " " << endl;
 
 }
-
-void boardDisplay(array<char,9>boardValuesUpdated)
+void boardDisplay(char boardValues)
 {
-	cout << " " << boardValuesUpdated[0] << " " << "|" << " " << boardValuesUpdated[1] << " " << "|" << " " << boardValuesUpdated[2] << " " << endl;
+	cout << " " << boardValues[0] << " " << "|" << " " << boardValues[1] << " " << "|" << " " << boardValues[2] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
-	cout << " " << boardValuesUpdated[3] << " " << "|" << " " << boardValuesUpdated[4] << " " << "|" << " " << boardValuesUpdated[5] << " " << endl;
+	cout << " " << boardValues[3] << " " << "|" << " " << boardValues[4] << " " << "|" << " " << boardValues[5] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
-	cout << " " << boardValuesUpdated[6] << " " << "|" << " " << boardValuesUpdated[7] << " " << "|" << " " << boardValuesUpdated[8] << " " << endl;
+	cout << " " << boardValues[6] << " " << "|" << " " << boardValues[7] << " " << "|" << " " << boardValues[8] << " " << endl;
 }
-
-//boardGame update raplacing values in the array (identified by player input passed as index), by "o" or "x"
-
-
-array<char,9> boardUpdate(int playerTurn, int playerInput, array<char, 9>boardValues)
+char boardUpdate(int playerTurn, int playerInput, char boardValues)
 {
 
 	if (playerTurn)
 	{
 		boardValues[playerInput] = 'o'; //replace value of array
-		array<char, 9>boardValuesUpdated = boardValues;
-		return boardValuesUpdated;
+		 //create new array whith new values of boardValues
+		return boardValues; //returns new array
 	}
 	else
 	{
 		boardValues[playerInput] = 'x';
-		array<char, 9>boardValuesUpdated = boardValues;
-		return boardValuesUpdated;
+		return boardValues;
 	}
 	return boardValues;
-}
+} //boardUpdate raplacing values in the array ( value identified by player input passed as index), by "o" or "x")
