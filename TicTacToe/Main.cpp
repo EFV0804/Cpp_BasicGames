@@ -21,12 +21,30 @@ int main(int argc, char** argv)
 	char* pBoardValues;
 	pBoardValues = &boardValues[0];
 
+	//WINCON CONDITIONALS
+	char winCons[8][3] =
+	{
+	{ boardValues[0], boardValues[1], boardValues[2] },
+	{ boardValues[3], boardValues[4], boardValues[5] },
+	{ boardValues[6], boardValues[7], boardValues[8] },
+	{ boardValues[0], boardValues[4], boardValues[8] },
+	{ boardValues[2], boardValues[4], boardValues[6] },
+	{ boardValues[0], boardValues[3], boardValues[6] },
+	{ boardValues[1], boardValues[4], boardValues[7] },
+	{ boardValues[2], boardValues[5], boardValues[8] }
+	};
+
+	for (int i = 0; i < 3; i++)
+	{
+		cout << winCons[0][i] << endl;
+	}
+
+	//INITIALIZE GAME
 
 	boardDisplay(pBoardValues);
 	instructions();
 
-	//randomize starting player
-	srand((unsigned int)time(0));
+	srand((unsigned int)time(0)); //randomize starting player
 	int playerTurn = rand()%2 + 1; // if true player 1 if playing, ask for input, else AI
 	int* pPlayerTurn = nullptr;
 	pPlayerTurn = &playerTurn;
@@ -40,6 +58,8 @@ int main(int argc, char** argv)
 	bool success = false;
 	bool quit = false;
 
+
+	//GAME LOOP
 	while (success == false || quit == false)
 	{
 		boardDisplay(pBoardValues);
