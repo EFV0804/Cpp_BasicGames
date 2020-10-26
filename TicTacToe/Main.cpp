@@ -10,43 +10,49 @@ using std::string;
 using std::srand;
 
 void instructions();
-void boardInit(char boardValues); 
-void boardDisplay(char pBoardValues); 
-char boardUpdate(int playerTurn, int playerInput, char boardValues);
+void boardDisplay(char* pBoardValues); 
+char* boardUpdate(int* playerTurn, int* pPlayerInput, char* pBoardValues);
 
 int main(int argc, char** argv)
 {
-
 	char boardValues[9] = { '0','1', '2', '3', '4', '5', '6', '7', '8' };
-	//char* pBoardValues;
-	//pBoardValues = &boardValues[0];
+	char* pBoardValues;
+	pBoardValues = &boardValues[0];
 
 
-	boardInit(boardValues);
+	boardDisplay(pBoardValues);
 	instructions();
 
 
 	int playerTurn = 1; // if true player 1 if playing, ask for input, else AI
+	int* pPlayerTurn = nullptr;
+	pPlayerTurn = &playerTurn;
+
+
 	int playerInput;
+	int* pPlayerInput = nullptr;
+	pPlayerInput = &playerInput;
+
 	bool success = false;
 	bool quit = false;
 
 	while (success == false || quit == false)
 	{
+		boardDisplay(pBoardValues);
 
 		if (playerTurn == 1 )
 		{
 			cout << "Player 1, choose a spot to mark: " << endl;
 			cin >> playerInput;
 
-			boardDisplay(*boardValues);
+			boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
 			playerTurn = 2;
 		}
 		else
 		{
 			cout << "Player 2, choose a spot to mark: " << endl;
 			cin >> playerInput;
-			boardDisplay(*boardValues);
+			boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
 			playerTurn = 1;
 		}
 
@@ -63,36 +69,28 @@ void instructions()
 	cout << "To mark a spot, enter the corresponding number when prompted." << endl;
 	cout << "The starting player is chosen at random. The players alternate turns." << endl;
 }
-void boardInit(char boardValues)
+void boardDisplay(char* pBoardValues)
 {
-	cout << " " << boardValues[0] << " " << "|" << " " <<boardValues[1] << " " << "|" << " " << boardValues[2] << " " << endl;
+	cout << " " << pBoardValues[0] << " " << "|" << " " << pBoardValues[1] << " " << "|" << " " << pBoardValues[2] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
-	cout << " " << boardValues[3] << " " << "|" << " " << boardValues[4] << " " << "|" << " " << boardValues[5] << " " << endl;
+	cout << " " << pBoardValues[3] << " " << "|" << " " << pBoardValues[4] << " " << "|" << " " << pBoardValues[5] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
-	cout << " " << boardValues[6] << " " << "|" << " " << boardValues[7] << " " << "|" << " " << boardValues[8] << " " << endl;
+	cout << " " << pBoardValues[6] << " " << "|" << " " << pBoardValues[7] << " " << "|" << " " << pBoardValues[8] << " " << endl;
 
 }
-void boardDisplay(char boardValues)
-{
-	cout << " " << boardValues[0] << " " << "|" << " " << boardValues[1] << " " << "|" << " " << boardValues[2] << " " << endl;
-	cout << "----" << "---" << "----" << endl;
-	cout << " " << boardValues[3] << " " << "|" << " " << boardValues[4] << " " << "|" << " " << boardValues[5] << " " << endl;
-	cout << "----" << "---" << "----" << endl;
-	cout << " " << boardValues[6] << " " << "|" << " " << boardValues[7] << " " << "|" << " " << boardValues[8] << " " << endl;
-}
-char boardUpdate(int playerTurn, int playerInput, char boardValues)
+char* boardUpdate(int* playerTurn, int* pPlayerInput, char* pBoardValues)
 {
 
-	if (playerTurn)
+	if (*playerTurn == 1)
 	{
-		boardValues[playerInput] = 'o'; //replace value of array
-		 //create new array whith new values of boardValues
-		return boardValues; //returns new array
+		int x = *pPlayerInput;
+		pBoardValues[x] = 'o'; //replace value of array
+		return pBoardValues; //returns update array
 	}
 	else
 	{
-		boardValues[playerInput] = 'x';
-		return boardValues;
+		int x = *pPlayerInput;
+		pBoardValues[x] = 'x';
+		return pBoardValues;
 	}
-	return boardValues;
 } //boardUpdate raplacing values in the array ( value identified by player input passed as index), by "o" or "x")
