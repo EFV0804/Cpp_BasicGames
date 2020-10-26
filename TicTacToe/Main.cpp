@@ -14,6 +14,8 @@ using std::srand;
 void instructions();
 void boardDisplay(char* pBoardValues); 
 char* boardUpdate(int* playerTurn, int* pPlayerInput, char* pBoardValues);
+bool isSuccessPlayerO(bool* pSuccess, char* pWinCons, char playerO);
+bool isSuccessPlayerX(bool* pSuccess, char* pWinCons, char playerX);
 
 int main(int argc, char** argv)
 {
@@ -22,6 +24,7 @@ int main(int argc, char** argv)
 	pBoardValues = &boardValues[0];
 
 	//WINCON CONDITIONALS
+	
 	char winCons[8][3] =
 	{
 	{ boardValues[0], boardValues[1], boardValues[2] },
@@ -33,11 +36,11 @@ int main(int argc, char** argv)
 	{ boardValues[1], boardValues[4], boardValues[7] },
 	{ boardValues[2], boardValues[5], boardValues[8] }
 	};
+	char* pWinCons = nullptr;
+	pWinCons = &winCons[0][0];
 
-	for (int i = 0; i < 3; i++) //test to print out values of winCons
-	{
-		cout << winCons[0][i] << endl;
-	}
+	char playerO = 'o';
+	char playerX = 'x';
 
 	//INITIALIZE GAME
 
@@ -56,6 +59,7 @@ int main(int argc, char** argv)
 	pPlayerInput = &playerInput;
 
 	bool success = false;
+	bool* pSuccess = &success;
 	bool quit = false;
 
 
@@ -79,6 +83,7 @@ int main(int argc, char** argv)
 			else
 			{
 				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
+				isSuccessPlayerO(pSuccess, pWinCons, playerO);
 				playerTurn = 2;
 			}
 		}
@@ -100,7 +105,7 @@ int main(int argc, char** argv)
 				playerTurn = 1;
 			}
 		}
-
+		//winConUpdate()
 	}
 	
 
@@ -139,3 +144,62 @@ char* boardUpdate(int* playerTurn, int* pPlayerInput, char* pBoardValues)
 		return pBoardValues;
 	}
 } //boardUpdate raplacing values in the array ( value identified by player input passed as index), by "o" or "x")
+bool isSuccessPlayerO(bool* pSuccess, char* pWinCons, char playerO)
+{
+	while (*pSuccess == false)
+	{
+		for (int a = 0; a < 8;) //variable to increment first index
+		{
+			int counter = 0;
+			for (int* i = 0; i < 3;) //variable to increment second index
+			{
+				if (pWinCons[a][i] == playerO && *pSuccess == false)
+				{
+					i++;
+					counter++;
+					cout << "counter = " << counter << endl;
+
+					if (counter == 3)
+					{
+						*pSuccess = true;
+						cout << pWinCons[a][i] << " winning condition is met" << endl;
+						return pSuccess;
+					}
+				}
+				else
+				{
+					a++;
+				}
+			}
+		}
+	}
+}
+bool isSuccessPlayerX(bool* pSuccess, char* pWinCons, char playerX)
+{
+	while (*pSuccess == false)
+	{
+		for (int a = 0; a < 8;) //variable to increment first index
+		{
+			int counter = 0;
+			for (int* i = 0; *i < 3;) //variable to increment second index
+			{
+				if (pWinCons[a][i] == playerX && *pSuccess == false)
+				{
+					i++;
+					counter++;
+					cout << "counter = " << counter << endl;
+
+					if (counter == 3)
+					{
+						*pSuccess = true;
+						cout << pWinCons[a][i] << " winning condition is met" << endl;
+					}
+				}
+				else
+				{
+					a++;
+				}
+			}
+		}
+	}
+}
