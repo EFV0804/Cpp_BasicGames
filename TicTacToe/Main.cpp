@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <array>
+#include <time.h>
+#include <random>
 
 using std::cout;
 using std::endl;
@@ -23,11 +25,13 @@ int main(int argc, char** argv)
 	boardDisplay(pBoardValues);
 	instructions();
 
-
-	int playerTurn = 1; // if true player 1 if playing, ask for input, else AI
+	//randomize starting player
+	srand((unsigned int)time(0));
+	int playerTurn = rand()%2 + 1; // if true player 1 if playing, ask for input, else AI
 	int* pPlayerTurn = nullptr;
 	pPlayerTurn = &playerTurn;
 
+	cout << "The starting player is Player " << playerTurn << endl;
 
 	int playerInput;
 	int* pPlayerInput = nullptr;
@@ -45,15 +49,36 @@ int main(int argc, char** argv)
 			cout << "Player 1, choose a spot to mark: " << endl;
 			cin >> playerInput;
 
-			boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
-			playerTurn = 2;
+			if (boardValues[playerInput] == 'x')
+			{
+				cout << "Sorry already taken, choose again." << endl;
+				cin >> playerInput;
+				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
+				playerTurn = 2;
+			}
+			else
+			{
+				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
+				playerTurn = 2;
+			}
 		}
 		else
 		{
 			cout << "Player 2, choose a spot to mark: " << endl;
 			cin >> playerInput;
-			boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
-			playerTurn = 1;
+
+			if (boardValues[playerInput] == 'o')
+			{
+				cout << "Sorry already taken, choose again." << endl;
+				cin >> playerInput;
+				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
+				playerTurn = 1;
+			}
+			else
+			{
+				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
+				playerTurn = 1;
+			}
 		}
 
 	}
