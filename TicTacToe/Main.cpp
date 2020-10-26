@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 	{ boardValues[2], boardValues[5], boardValues[8] }
 	};
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++) //test to print out values of winCons
 	{
 		cout << winCons[0][i] << endl;
 	}
