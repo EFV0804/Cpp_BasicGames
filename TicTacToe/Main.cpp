@@ -12,78 +12,86 @@ using std::string;
 using std::srand;
 
 void instructions();
-void boardDisplay(char* pBoardValues); 
-char* boardUpdate(int* playerTurn, int* pPlayerInput, char* pBoardValues);
-bool isSuccessPlayerO(bool* pSuccess, char* pWinCons, char playerO);
-bool isSuccessPlayerX(bool* pSuccess, char* pWinCons, char playerX);
+void boardDisplay(array<char, 9> boardValues);
+array<char, 9> boardUpdate(int playerTurn, int playerInput, array<char, 9>& boardValues);
+//bool isSuccessPlayerO(bool* pSuccess, char* pWinCons, char playerO);
+//bool isSuccessPlayerX(bool* pSuccess, char* pWinCons, char playerX);
 
 int main(int argc, char** argv)
 {
-	char boardValues[9] = { '0','1', '2', '3', '4', '5', '6', '7', '8' };
-	char* pBoardValues;
-	pBoardValues = &boardValues[0];
+	// INITIAL BOARD VALUES + POINTER
 
-	//WINCON CONDITIONALS
+	array<char, 9> boardValues = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
+	//char* pBoardValues;
+	//pBoardValues = &boardValues[0];
+
+	//WINCON ARRAY + POINTER
 	
-	char winCons[8][3] =
-	{
+	array<array<char, 3>, 8> winCons =
+	{ {
 	{ boardValues[0], boardValues[1], boardValues[2] },
-	{ boardValues[3], boardValues[4], boardValues[5] },
-	{ boardValues[6], boardValues[7], boardValues[8] },
-	{ boardValues[0], boardValues[4], boardValues[8] },
-	{ boardValues[2], boardValues[4], boardValues[6] },
 	{ boardValues[0], boardValues[3], boardValues[6] },
+	{ boardValues[0], boardValues[4], boardValues[8] },
 	{ boardValues[1], boardValues[4], boardValues[7] },
-	{ boardValues[2], boardValues[5], boardValues[8] }
-	};
-	char* pWinCons = nullptr;
-	pWinCons = &winCons[0][0];
+	{ boardValues[3], boardValues[4], boardValues[5] },
+	{ boardValues[2], boardValues[4], boardValues[6] },
+	{ boardValues[2], boardValues[5], boardValues[8] },
+	{ boardValues[6], boardValues[7], boardValues[8] }
+	} };
+
+
+	// PLAYER SYMBOLS
 
 	char playerO = 'o';
 	char playerX = 'x';
 
 	//INITIALIZE GAME
 
-	boardDisplay(pBoardValues);
 	instructions();
 
 	srand((unsigned int)time(0)); //randomize starting player
-	int playerTurn = rand()%2 + 1; // if true player 1 if playing, ask for input, else AI
+	int playerTurn = rand()%2 + 1;
 	int* pPlayerTurn = nullptr;
 	pPlayerTurn = &playerTurn;
 
-	cout << "The starting player is Player " << playerTurn << endl;
+	cout << "The starting player is Player " << playerTurn <<endl;
 
+	// GAME LOOP
 	int playerInput;
 	int* pPlayerInput = nullptr;
 	pPlayerInput = &playerInput;
 
+		//While loop variables
 	bool success = false;
 	bool* pSuccess = &success;
 	bool quit = false;
 
+		//For loops variables
+	int a = 0;
+	int i = 0;
+	int counter = 0;
 
-	//GAME LOOP
-	while (success == false || quit == false)
+	while (success == false /*|| quit == false*/)
 	{
-		boardDisplay(pBoardValues);
+		boardDisplay(boardValues);
+
 
 		if (playerTurn == 1 )
 		{
 			cout << "Player 1, choose a spot to mark: " << endl;
 			cin >> playerInput;
 
-			if (boardValues[playerInput] == 'x')
+			if (boardValues[playerInput] == playerO)
 			{
 				cout << "Sorry already taken, choose again." << endl;
 				cin >> playerInput;
-				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
+				boardUpdate(playerTurn, playerInput, boardValues);
+				isSuccessPlayerO(); //stopped here, calling and testing isSuccessPlayerO() in main code
 				playerTurn = 2;
 			}
 			else
 			{
-				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
-				isSuccessPlayerO(pSuccess, pWinCons, playerO);
+				boardUpdate(playerTurn, playerInput, boardValues);
 				playerTurn = 2;
 			}
 		}
@@ -92,16 +100,16 @@ int main(int argc, char** argv)
 			cout << "Player 2, choose a spot to mark: " << endl;
 			cin >> playerInput;
 
-			if (boardValues[playerInput] == 'o')
+			if (boardValues[playerInput] == playerX)
 			{
 				cout << "Sorry already taken, choose again." << endl;
 				cin >> playerInput;
-				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
+				boardUpdate(playerTurn, playerInput, boardValues);
 				playerTurn = 1;
 			}
 			else
 			{
-				boardUpdate(pPlayerTurn, pPlayerInput, pBoardValues);
+				boardUpdate(playerTurn, playerInput, boardValues);
 				playerTurn = 1;
 			}
 		}
@@ -119,87 +127,65 @@ void instructions()
 	cout << "To mark a spot, enter the corresponding number when prompted." << endl;
 	cout << "The starting player is chosen at random. The players alternate turns." << endl;
 }
-void boardDisplay(char* pBoardValues)
+void boardDisplay(array<char,9> boardValues)
 {
-	cout << " " << pBoardValues[0] << " " << "|" << " " << pBoardValues[1] << " " << "|" << " " << pBoardValues[2] << " " << endl;
+	cout << " " << boardValues[0] << " " << "|" << " " << boardValues[1] << " " << "|" << " " << boardValues[2] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
-	cout << " " << pBoardValues[3] << " " << "|" << " " << pBoardValues[4] << " " << "|" << " " << pBoardValues[5] << " " << endl;
+	cout << " " << boardValues[3] << " " << "|" << " " << boardValues[4] << " " << "|" << " " << boardValues[5] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
-	cout << " " << pBoardValues[6] << " " << "|" << " " << pBoardValues[7] << " " << "|" << " " << pBoardValues[8] << " " << endl;
+	cout << " " << boardValues[6] << " " << "|" << " " << boardValues[7] << " " << "|" << " " << boardValues[8] << " " << endl;
 
 }
-char* boardUpdate(int* playerTurn, int* pPlayerInput, char* pBoardValues)
+array<char, 9> boardUpdate(int playerTurn, int playerInput, array<char, 9> &boardValues)
 {
+	int x;
 
-	if (*playerTurn == 1)
+	if (playerTurn == 1)
 	{
-		int x = *pPlayerInput;
-		pBoardValues[x] = 'o'; //replace value of array
-		return pBoardValues; //returns update array
+		int x = playerInput;
+		boardValues[x] = 'o'; //replace value of array
+		return boardValues; //returns update array
 	}
 	else
 	{
-		int x = *pPlayerInput;
-		pBoardValues[x] = 'x';
-		return pBoardValues;
+		int x = playerInput;
+		boardValues[x] = 'x';
+		return boardValues;
 	}
 } //boardUpdate raplacing values in the array ( value identified by player input passed as index), by "o" or "x")
-bool isSuccessPlayerO(bool* pSuccess, char* pWinCons, char playerO)
+bool* isSuccessPlayerO(bool* pSuccess, array<array<char, 3>, 8> winCons, char playerO)
 {
-	while (*pSuccess == false)
-	{
-		for (int a = 0; a < 8;) //variable to increment first index
-		{
-			int counter = 0;
-			for (int* i = 0; i < 3;) //variable to increment second index
-			{
-				if (pWinCons[a][i] == playerO && *pSuccess == false)
-				{
-					i++;
-					counter++;
-					cout << "counter = " << counter << endl;
 
-					if (counter == 3)
-					{
-						*pSuccess = true;
-						cout << pWinCons[a][i] << " winning condition is met" << endl;
-						return pSuccess;
-					}
-				}
-				else
-				{
-					a++;
-				}
+	int a = 0;
+	int i = 0;
+	int counter = 0;
+
+	for (a = 0; a < 8; a++)
+	{
+		counter = 0;
+		cout << "a= " << a << endl;
+		for (i = 0; i < 3; i++)
+		{
+			cout << "char = " << winCons[a][i] << endl;
+			if (winCons[a][i] == playerO)
+			{
+				counter++;
+				cout << "counter = " << counter << endl;
+			}
+			else
+			{
 			}
 		}
-	}
-}
-bool isSuccessPlayerX(bool* pSuccess, char* pWinCons, char playerX)
-{
-	while (*pSuccess == false)
-	{
-		for (int a = 0; a < 8;) //variable to increment first index
+		if (counter == 3)
 		{
-			int counter = 0;
-			for (int* i = 0; *i < 3;) //variable to increment second index
-			{
-				if (pWinCons[a][i] == playerX && *pSuccess == false)
-				{
-					i++;
-					counter++;
-					cout << "counter = " << counter << endl;
-
-					if (counter == 3)
-					{
-						*pSuccess = true;
-						cout << pWinCons[a][i] << " winning condition is met" << endl;
-					}
-				}
-				else
-				{
-					a++;
-				}
-			}
+			cout << "Victory!" << endl;
+			*pSuccess = true;
+			break;
 		}
 	}
+	if (!*pSuccess)
+	{
+		cout << "no victory conditions met" << endl;
+	}
+	return pSuccess;
 }
