@@ -16,6 +16,7 @@ void boardDisplay(array<char, 9> boardValues);
 array<char, 9> boardUpdate(int playerTurn, int playerInput, array<char, 9>& boardValues);
 bool isSuccessPlayerO(bool* pSuccess, array<char, 9> boardValues, char playerO);
 bool isSuccessPlayerX(bool* pSuccess, array<char, 9> boardValues, char playerX);
+bool isTie(array<char, 9> boardValues, char playerO, char playerX, bool tie);
 
 
 int main(int argc, char** argv)
@@ -78,7 +79,7 @@ int main(int argc, char** argv)
 				boardUpdate(playerTurn, playerInput, boardValues);
 				boardDisplay(boardValues);
 				isSuccessPlayerO(pSuccess, boardValues, playerO);
-				/*isTie();*/
+				isTie(boardValues, playerO, playerX, tie);
 				playerTurn = 2;
 		}
 		else
@@ -98,7 +99,7 @@ int main(int argc, char** argv)
 				boardUpdate(playerTurn, playerInput, boardValues);
 				boardDisplay(boardValues);
 				isSuccessPlayerX(pSuccess, boardValues, playerX);
-				/*isTie();*/
+				isTie(boardValues, playerO, playerX, tie);
 				playerTurn = 1;
 		}
 	}
@@ -225,23 +226,26 @@ bool isSuccessPlayerX(bool* pSuccess, array<char, 9> boardValues, char playerX)
 	}
 	return *pSuccess;
 }
-bool isTie(array<char, 9> boardValues, char playerO, char playerX, bool* pTie)
+bool isTie(array<char, 9> boardValues, char playerO, char playerX, bool tie)
 {
 	int counter = 0;
-	for (int i = 0; 1 < 9; i++)
+	for (int i = 0; i < 9; i++)
 	{
-		if (boardValues[i] = playerO || playerX)
+		if (boardValues[i] == 'o')
 		{
 			counter++;
 		}
-		else
+		else if (boardValues[i] == 'x')
 		{
-			break;
+			counter++;
+			cout << counter << endl;
 		}
+
 	}
 	if (counter == 9)
 	{
-		*pTie = true;
-		return *pTie;
+		tie = true;
+		cout << "it's a tie" << endl;
+		return tie;
 	}
 }
