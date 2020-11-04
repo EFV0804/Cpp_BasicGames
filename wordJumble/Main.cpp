@@ -16,35 +16,19 @@ int main(int argc, char** argv)
 {
 	array<string, 5>words{ "banana", "gigantic", "storm", "serendipity", "global" };
 	array<string, 5 > hints{ "a funky shaped fruit","an adjective to describe the size of something","a weather anomaly", "the positive outcome of luck","a scale used to describe the planet" };
-
-	/*srand((unsigned int)time(0));
-	int x = (rand() % 5);
-	string randomWord = words[x];
-	string realWordSize = randomWord;
-	int wordLength = realWordSize.size();
-	string hint = hints[x];
-	int score = wordLength;
-
-		for (int i = 0; i < wordLength; i++)
-		{
-			int letter1 = (rand() % wordLength);
-			int letter2 = (rand() % wordLength);
-
-			char temp;
-			temp = realWordSize[letter1];
-			realWordSize[letter1] = realWordSize[letter2];
-			realWordSize[letter2] = temp;
-
-		}*/
-
+	// INSTRUCTIONS
 	cout << "Put the letters of a word in the correct order. " << endl;
-	//cout << realWordSize << endl;
+
+	//LOOP VARS
 	bool quit = false;
-	bool playerStatus = false; //Changes if the players get the answer right
 	string playerGuess; // player's input
 
-	while (quit == false) //Game loop
+
+	//GAME LOOP
+	while (quit == false)
 	{
+
+		//PICK RANDOM WORD
 		srand((unsigned int)time(0)); //random seed
 		int x = (rand() % 5); // generate a random int between 0-5
 		string randomWord = words[x];
@@ -53,6 +37,10 @@ int main(int argc, char** argv)
 		string hint = hints[x];
 		int score = wordLength;
 
+		bool playerStatus = false; //Changes if the players get the answer right
+
+
+		// SWAP RANDOM INDEX
 		for (int i = 0; i < wordLength; i++)
 		{
 			int letter1 = (rand() % wordLength);
@@ -63,11 +51,12 @@ int main(int argc, char** argv)
 			realWordSize[letter2] = temp;
 
 		}
+
 		cout << realWordSize << endl;
 		cin >> playerGuess;
 
-
-		while (playerStatus == false && quit == false) //Loop to keep player guessing
+		//PLAYER IS GUESSING LOOP
+		while (playerStatus == false)
 		{
 			if (playerGuess == randomWord)
 			{
@@ -83,28 +72,14 @@ int main(int argc, char** argv)
 			}
 			else if (playerGuess == "quit")
 			{
-				cout << "Thanks for trying. The correct answer was: " << randomWord << endl;
+				cout << "Thanks for playing. The correct answer was: " << randomWord << endl;
 				quit = true;
+				break;
 			}
 			else
 			{
 				cout << "Wrong. Guess again." << endl;
 				cin >> playerGuess;
-			}
-		}
-		if (playerStatus == true ) // option to keep playing with a new word, or to quit.
-		{
-			cout << "Do you want to play again?" << endl;
-			cin >> playerGuess;
-
-			if (playerGuess == "yes" || "Yes") 
-			{
-				playerStatus = false; // player bet
-			}
-			else //doesn't quit the loop. Sends back to guessing
-			{
-				playerStatus = false;
-				quit = true;
 			}
 		}
 	}
