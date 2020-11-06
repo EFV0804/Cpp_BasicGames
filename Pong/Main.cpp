@@ -6,9 +6,8 @@
 //DEFINITIONS
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 480;
-SDL_Rect ballRect = { 0,0,32,32 };
 bool quit = false;
-Ball ball = Ball(0, 100, 32, 32);
+Ball ball = Ball(0, 100, 32, 32, 6, 6);
 
 void load();
 bool handleInput();
@@ -70,7 +69,7 @@ bool handleInput()
 }
 void update()
 {
-
+	ball.update();
 }
 void draw(SDL_Renderer* renderer)
 {
