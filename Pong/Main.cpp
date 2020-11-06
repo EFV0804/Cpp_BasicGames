@@ -3,6 +3,8 @@
 #include<SDL_mixer.h>
 #include"Ball.h"
 #include"Paddle.h"
+#include"InputState.h"
+
 
 
 //DEFINITIONS
@@ -12,12 +14,15 @@ bool quit = false;
 Ball ball = Ball(0, 100, 32, 32, 6, 6);
 Paddle leftPaddle = Paddle(0, 200, 128, 32, 4);
 Paddle rightPaddle = Paddle((SCREEN_WIDTH-32), 200, 128, 32, 4);
+InputState inputStateLeft = InputState();
+InputState inputStateRight = InputState();
 
 void load();
 bool handleInput();
 void update();
 void draw(SDL_Renderer*);
 void close(SDL_Window*, SDL_Renderer*);
+bool AABBcollision(SDL_Rect* rectA, SDL_Rect * rectB);
 
 int main(int argc, char** argv)
 {
@@ -62,7 +67,41 @@ bool handleInput()
 	{
 		if (e.type == SDL_KEYDOWN)
 		{
-
+			if (e.key.keysym.sym == SDLK_z)
+			{
+				inputStateLeft.paddleUp = true;
+			}
+			else if (e.key.keysym.sym == SDLK_s)
+			{
+				inputStateLeft.paddleDown = true;
+			}
+			if (e.key.keysym.sym == SDLK_i)
+			{
+				inputStateRight.paddleUp = true;
+			}
+			else if (e.key.keysym.sym == SDLK_j)
+			{
+				inputStateRight.paddleDown = true;
+			}
+		}
+		else if (e.type == SDL_KEYUP)
+		{
+			if (e.key.keysym.sym == SDLK_z)
+			{
+				inputStateLeft.paddleUp = false;
+			}
+			else if (e.key.keysym.sym == SDLK_s)
+			{
+				inputStateLeft.paddleDown = false;
+			}
+			if (e.key.keysym.sym == SDLK_i)
+			{
+				inputStateRight.paddleUp = false;
+			}
+			else if (e.key.keysym.sym == SDLK_j)
+			{
+				inputStateRight.paddleDown = false;
+			}
 		}
 		else if (e.type == SDL_QUIT)
 		{
@@ -74,7 +113,23 @@ bool handleInput()
 void update()
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
-	/*leftPaddle.update();*/
+	leftPaddle.update(&inputStateLeft, SCREEN_HEIGHT);
+	rightPaddle.update(&inputStateRight, SCREEN_HEIGHT);
+
+	//COLLISIONS
+	SDL_Rect ballRect = ball.toRect();
+	SDL_Rect leftPaddleRect = leftPaddle.toRect();
+	SDL_Rect rightPaddleRect = rightPaddle.toRect();
+	if (AABBcollision(&ballRect, &leftPaddleRect))
+	{
+		ball.speedX *= -1;
+		ball.x = leftPaddleRect.x + leftPaddleRect.w;
+	}
+	else if (AABBcollision(&ballRect, &rightPaddleRect))
+	{
+		ball.speedX *= -1;
+		ball.x = rightPaddleRect.x - rightPaddleRect.w;
+	}
 }
 void draw(SDL_Renderer* renderer)
 {
@@ -95,4 +150,16 @@ void close(SDL_Window* window, SDL_Renderer* renderer)
 	Mix_Quit();
 	TTF_Quit();
 	SDL_Quit();
+}
+bool AABBcollision(SDL_Rect* rectA, SDL_Rect* rectB)
+{
+	int xMinA = rectA->x;
+	int xMaxA = rectA->x + rectA->w;
+	int yMinA = rectA->y;
+	int yMaxA = rectA->y + rectA->h;
+	int xMinB = rectB->x;
+	int xMaxB = rectB->x + rectB->w;
+	int yMinB = rectB->y;
+	int yMaxB = rectB->y + rectB->h;
+	return !(xMinA > xMaxB || xMaxA < xMinB || yMinA > yMaxB || yMaxA < yMinB);
 }

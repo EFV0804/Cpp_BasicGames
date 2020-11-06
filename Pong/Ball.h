@@ -10,12 +10,12 @@ public:
 	SDL_Rect toRect();
 	void draw(SDL_Renderer* renderer);
 	void update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+	int speedX;
+	int x;
 
 private:
-	int x;
 	int y;
 	int w;
 	int h;
-	int speedX;
 	int speedY;
 };
