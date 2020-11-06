@@ -12,6 +12,11 @@ public:
 	void talk();
 	void play();
 	void eat();
+	int hunger;
+	int boredom;
+	int mood();
+	int getHunger() const {return hunger;}
+	int getBoredom() const {return boredom;}
 private:
 	array<string, 10> facts = { "Did you know that Barbie's full name is Barbara Millicent Roberts? I didn't.",
 	"I just found out that dragonflies have six legs but can't walk. Fascinating.",
@@ -23,9 +28,6 @@ private:
 	"When you pour Coca-Cola on your keyboard, it stops working.",
 	"When people use the word 'quantum', 99% of the time, it just means they don't have a clue what they're talking about.",
 	"Did you know that most boring facts are made up? Now that's interesting." };
-	int hunger;
-	int boredom;
-	int mood(); 
 	void passTime();
 
 
