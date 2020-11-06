@@ -4,8 +4,9 @@
 using std::cout;
 using std::endl;
 
-Tamagochi::Tamagochi()
+Tamagochi::Tamagochi(const string& pName)
 {
+	name = pName;
 	hunger = 5;
 	boredom = 5;
 	facts;

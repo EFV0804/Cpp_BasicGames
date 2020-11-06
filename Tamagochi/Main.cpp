@@ -11,9 +11,7 @@ int main(int argc, char** argv)
 {
 	bool quit = false;
 	string playerChoice;
-	Tamagochi tamagochiA;
-	cout << "Please pick a name for your new very needy and completly useless pet." << endl;
-	cin >> tamagochiA.name;
+	Tamagochi tamagochiA ("Dick");
 	cout << tamagochiA.getBoredom() << endl;
 	cout << tamagochiA.getHunger() << endl;
 

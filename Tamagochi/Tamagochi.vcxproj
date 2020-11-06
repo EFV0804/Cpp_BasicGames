@@ -143,6 +143,7 @@
     <ClCompile Include="Tamagochi.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Farm.h" />
     <ClInclude Include="Tamagochi.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
