@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
 	bool quit = false;
 	string playerChoice;
-	Tamagochi tamagochiA ("Dick");
+	Tamagochi tamagochiA ("Richard");
 	cout << tamagochiA.getBoredom() << endl;
 	cout << tamagochiA.getHunger() << endl;
 
