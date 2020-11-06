@@ -2,12 +2,16 @@
 #include<SDL_ttf.h>
 #include<SDL_mixer.h>
 #include"Ball.h"
+#include"Paddle.h"
+
 
 //DEFINITIONS
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 480;
 bool quit = false;
 Ball ball = Ball(0, 100, 32, 32, 6, 6);
+Paddle leftPaddle = Paddle(0, 200, 128, 32, 4);
+Paddle rightPaddle = Paddle((SCREEN_WIDTH-32), 200, 128, 32, 4);
 
 void load();
 bool handleInput();
@@ -69,7 +73,8 @@ bool handleInput()
 }
 void update()
 {
-	ball.update();
+	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
+	/*leftPaddle.update();*/
 }
 void draw(SDL_Renderer* renderer)
 {
@@ -78,6 +83,8 @@ void draw(SDL_Renderer* renderer)
 
 	SDL_SetRenderDrawColor(renderer, 0XFF, 0XFF, 0XFF, 0XFF);
 	ball.draw(renderer);
+	leftPaddle.draw(renderer);
+	rightPaddle.draw(renderer);
 
 	SDL_RenderPresent(renderer);
 }

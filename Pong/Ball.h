@@ -1,5 +1,6 @@
 #pragma once
 #include<SDL.h>
+
 class Ball
 {
 public:
@@ -8,7 +9,7 @@ public:
 	~Ball();
 	SDL_Rect toRect();
 	void draw(SDL_Renderer* renderer);
-	void update();
+	void update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 
 private:
 	int x;
