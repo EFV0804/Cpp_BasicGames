@@ -10,6 +10,8 @@ public:
 	SDL_Rect toRect();
 	void draw(SDL_Renderer* renderer);
 	void update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+	void horizontalBounce(int xReplace);
+	void verticalBounce(int yReplace);
 	int speedX;
 	int x;
 

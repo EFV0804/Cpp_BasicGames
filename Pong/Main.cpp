@@ -122,13 +122,11 @@ void update()
 	SDL_Rect rightPaddleRect = rightPaddle.toRect();
 	if (AABBcollision(&ballRect, &leftPaddleRect))
 	{
-		ball.speedX *= -1;
-		ball.x = leftPaddleRect.x + leftPaddleRect.w;
+		ball.horizontalBounce(leftPaddleRect.x + leftPaddleRect.w);
 	}
 	else if (AABBcollision(&ballRect, &rightPaddleRect))
 	{
-		ball.speedX *= -1;
-		ball.x = rightPaddleRect.x - rightPaddleRect.w;
+		ball.horizontalBounce(rightPaddleRect.x - rightPaddleRect.w);
 	}
 }
 void draw(SDL_Renderer* renderer)
