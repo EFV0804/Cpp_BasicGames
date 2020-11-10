@@ -36,14 +36,14 @@ void Ball::update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 	{
 		verticalBounce((SCREEN_HEIGHT - h));
 	}
-	if (x<0)
-	{
-		horizontalBounce(0);
-	}
-	if (x > (SCREEN_WIDTH - w))
-	{
-		horizontalBounce((SCREEN_WIDTH - w));
-	}
+	//if (x<0)
+	//{
+	//	horizontalBounce(0);
+	//}
+	//if (x > (SCREEN_WIDTH - w))
+	//{
+	//	horizontalBounce((SCREEN_WIDTH - w));
+	//}
 }
 void Ball::horizontalBounce(int xReplace)
 {
@@ -54,4 +54,16 @@ void Ball::verticalBounce(int yReplace)
 {
 	speedY *= -1;
 	y = yReplace;
+}
+void Ball::setX(int newX)
+{
+	x = newX;
+}
+int Ball::getX() const
+{
+	return x;
+}
+int Ball::getWidth() const
+{
+	return w;
 }

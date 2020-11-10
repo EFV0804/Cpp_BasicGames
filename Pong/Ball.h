@@ -12,6 +12,9 @@ public:
 	void update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 	void horizontalBounce(int xReplace);
 	void verticalBounce(int yReplace);
+	void setX(int newX);
+	int getX() const;
+	int getWidth() const;
 	int speedX;
 	int x;
 	int y;

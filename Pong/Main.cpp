@@ -17,6 +17,9 @@ Paddle rightPaddle = Paddle((SCREEN_WIDTH-32), 200, 128, 32, 4);
 InputState inputStateLeft = InputState();
 InputState inputStateRight = InputState();
 
+int playerScore = 0;
+int AiScore = 0;
+
 void load();
 bool handleInput();
 void update();
@@ -44,7 +47,6 @@ int main(int argc, char** argv)
 
 		//UPDATE
 		update();
-
 		//DRAW
 		draw(renderer);
 	}
@@ -114,7 +116,7 @@ void update()
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
 	leftPaddle.update(&inputStateLeft, SCREEN_HEIGHT);
-	rightPaddle.updateAi(SCREEN_HEIGHT, ball.y);
+	rightPaddle.updateAi(SCREEN_HEIGHT, ball.y); // for player two use update()
 
 	//COLLISIONS
 	SDL_Rect ballRect = ball.toRect();
@@ -127,6 +129,18 @@ void update()
 	else if (AABBcollision(&ballRect, &rightPaddleRect))
 	{
 		ball.horizontalBounce(rightPaddleRect.x - rightPaddleRect.w);
+	}
+
+	// POINTS
+	if (ball.getX() < 0)
+	{
+		++playerScore;
+		ball.setX(SCREEN_WIDTH / 2);
+	}
+	else if (ball.getX() > SCREEN_WIDTH - ball.getWidth())
+	{
+		++AiScore;
+		ball.setX(SCREEN_WIDTH / 2);
 	}
 }
 void draw(SDL_Renderer* renderer)
