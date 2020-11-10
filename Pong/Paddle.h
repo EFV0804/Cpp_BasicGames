@@ -7,10 +7,13 @@ class Paddle
 {
 public:
 	Paddle();
-	Paddle(int pH, int pW, int pX, int pY, int pSpeedY);
+	Paddle(int pX, int pY, int pH, int pW, int pSpeedY);
 	void draw(SDL_Renderer* renderer);
 	SDL_Rect toRect();
 	void update(InputState* inputState, int SCREEN_HEIGHT);
+	void moveUp(int SCREEN_HEIGHT);
+	void moveDown(int SCREEN_HEIGHT);
+	void updateAi(int SCREEN_HEIGHT, int ballY);
 
 private:
 	int h;

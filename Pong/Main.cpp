@@ -11,8 +11,8 @@
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 480;
 bool quit = false;
-Ball ball = Ball(0, 100, 32, 32, 6, 6);
-Paddle leftPaddle = Paddle(0, 200, 128, 32, 4);
+Ball ball = Ball(0, 100, 32, 32, 6, 6); //(x,y,w,h,speedX,speedY)
+Paddle leftPaddle = Paddle(0, 200, 128, 32, 4); //(x,y,h,w,speedY)
 Paddle rightPaddle = Paddle((SCREEN_WIDTH-32), 200, 128, 32, 4);
 InputState inputStateLeft = InputState();
 InputState inputStateRight = InputState();
@@ -114,7 +114,7 @@ void update()
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
 	leftPaddle.update(&inputStateLeft, SCREEN_HEIGHT);
-	rightPaddle.update(&inputStateRight, SCREEN_HEIGHT);
+	rightPaddle.updateAi(SCREEN_HEIGHT, ball.y);
 
 	//COLLISIONS
 	SDL_Rect ballRect = ball.toRect();

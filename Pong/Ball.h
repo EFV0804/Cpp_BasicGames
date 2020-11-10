@@ -14,9 +14,10 @@ public:
 	void verticalBounce(int yReplace);
 	int speedX;
 	int x;
+	int y;
 
 private:
-	int y;
+
 	int w;
 	int h;
 	int speedY;

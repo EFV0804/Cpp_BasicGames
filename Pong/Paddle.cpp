@@ -27,18 +27,37 @@ void Paddle::update(InputState* inputState,  int SCREEN_HEIGHT)
 {
 	if (inputState->paddleUp)
 	{
-		y -= speedY;
-		if (y<0)
-		{
-			y = 0;
-		}
+		moveUp(SCREEN_HEIGHT);
 	}
 	if (inputState->paddleDown)
 	{
-		y += speedY;
-		if (y>(SCREEN_HEIGHT - h))
-		{
-			y = (SCREEN_HEIGHT - h);
-		}
+		moveDown(SCREEN_HEIGHT);
+	}
+}
+void Paddle::moveUp(int SCREEN_HEIGHT)
+{
+	y -= speedY;
+	if (y < 0)
+	{
+		y = 0;
+	}
+}
+void Paddle::moveDown(int SCREEN_HEIGHT)
+{
+	y += speedY;
+	if (y > (SCREEN_HEIGHT - h))
+	{
+		y = (SCREEN_HEIGHT - h);
+	}
+}
+void Paddle::updateAi(int SCREEN_HEIGHT, int ballY)
+{
+	if (ballY < y + h / 4)
+	{
+		moveUp(SCREEN_HEIGHT);
+	}
+	if (ballY > y + h / 4 * 3)
+	{
+		moveDown(SCREEN_HEIGHT);
 	}
 }
