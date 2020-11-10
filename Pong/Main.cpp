@@ -1,9 +1,11 @@
 #include<SDL.h>
 #include<SDL_ttf.h>
 #include<SDL_mixer.h>
+#include<cstdio>
 #include"Ball.h"
 #include"Paddle.h"
 #include"InputState.h"
+#include"Text.h"
 
 
 
@@ -16,13 +18,14 @@ Paddle leftPaddle = Paddle(0, 200, 128, 32, 4); //(x,y,h,w,speedY)
 Paddle rightPaddle = Paddle((SCREEN_WIDTH-32), 200, 128, 32, 4);
 InputState inputStateLeft = InputState();
 InputState inputStateRight = InputState();
+Text playerScoreText = Text(120, 100, 25, 50);
+Text opponentScoreText = Text(650, 100, 25, 50);
+int playerScore = 99;
+int opponentScore = 99;
 
-int playerScore = 0;
-int AiScore = 0;
-
-void load();
+void load(SDL_Renderer* renderer);
 bool handleInput();
-void update();
+void update(SDL_Renderer* renderer);
 void draw(SDL_Renderer*);
 void close(SDL_Window*, SDL_Renderer*);
 bool AABBcollision(SDL_Rect* rectA, SDL_Rect * rectB);
@@ -40,13 +43,14 @@ int main(int argc, char** argv)
 	Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
 
 	//LOAD
+	load(renderer);
 	while (!quit)
 	{
 		//INPUTS
 		quit = handleInput();
 
 		//UPDATE
-		update();
+		update(renderer);
 		//DRAW
 		draw(renderer);
 	}
@@ -58,9 +62,10 @@ int main(int argc, char** argv)
 
 }
 
-void load()
+void load(SDL_Renderer* renderer)
 {
-
+	playerScoreText.load(renderer, "0");
+	opponentScoreText.load(renderer, "0");
 }
 bool handleInput()
 {
@@ -112,7 +117,7 @@ bool handleInput()
 	}
 	return false;
 }
-void update()
+void update(SDL_Renderer* renderer)
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
 	leftPaddle.update(&inputStateLeft, SCREEN_HEIGHT);
@@ -132,15 +137,21 @@ void update()
 	}
 
 	// POINTS
-	if (ball.getX() < 0)
+	if (ball.getX() > SCREEN_WIDTH - ball.getWidth())
 	{
 		++playerScore;
 		ball.setX(SCREEN_WIDTH / 2);
+		char newText[3];
+		sprintf_s(newText, "%d", playerScore);
+		playerScoreText.changeText(renderer, newText);
 	}
-	else if (ball.getX() > SCREEN_WIDTH - ball.getWidth())
+	else if (ball.getX() < 0)
 	{
-		++AiScore;
+		++opponentScore;
 		ball.setX(SCREEN_WIDTH / 2);
+		char newText[3];
+		sprintf_s(newText, "%d", opponentScore);
+		opponentScoreText.changeText(renderer, newText);
 	}
 }
 void draw(SDL_Renderer* renderer)
@@ -149,6 +160,8 @@ void draw(SDL_Renderer* renderer)
 	SDL_RenderClear(renderer);
 
 	SDL_SetRenderDrawColor(renderer, 0XFF, 0XFF, 0XFF, 0XFF);
+	playerScoreText.draw(renderer);
+	opponentScoreText.draw(renderer);
 	ball.draw(renderer);
 	leftPaddle.draw(renderer);
 	rightPaddle.draw(renderer);
