@@ -1,7 +1,7 @@
 #include<SDL.h>
 #include<SDL_ttf.h>
 #include<SDL_mixer.h>
-#include<cstdio>
+#include<cstdio> //import to use sprintf_s to convert int to str
 #include"Ball.h"
 #include"Paddle.h"
 #include"InputState.h"
@@ -17,17 +17,17 @@ Ball ball = Ball(0, 100, 32, 32, 6, 6); //(x,y,w,h,speedX,speedY)
 Paddle leftPaddle = Paddle(0, 200, 128, 32, 4); //(x,y,h,w,speedY)
 Paddle rightPaddle = Paddle((SCREEN_WIDTH-32), 200, 128, 32, 4);
 InputState inputStateLeft = InputState();
-InputState inputStateRight = InputState();
+InputState inputStateRight = InputState(); // use in update() for player 2 control
 Text playerScoreText = Text(120, 100, 25, 50);
 Text opponentScoreText = Text(650, 100, 25, 50);
-int playerScore = 99;
-int opponentScore = 99;
+int playerScore = 0;
+int opponentScore = 0;
 
-void load(SDL_Renderer* renderer);
-bool handleInput();
-void update(SDL_Renderer* renderer);
-void draw(SDL_Renderer*);
-void close(SDL_Window*, SDL_Renderer*);
+void load(SDL_Renderer* renderer); //loads score texts
+bool handleInput(); //while loop over events to check for type of input and call appropriate functions, returns bool
+void update(SDL_Renderer* renderer); //calls Ball::update(), Paddle::update(), Paddle::updateAi(), checks collisions, and increments scores
+void draw(SDL_Renderer*); //Calls Ball::draw(), Paddle::draw(), Text::draw()
+void close(SDL_Window*, SDL_Renderer*); // Destroys renderer, window, quits SDL TTF MIX
 bool AABBcollision(SDL_Rect* rectA, SDL_Rect * rectB);
 
 int main(int argc, char** argv)
@@ -74,6 +74,7 @@ bool handleInput()
 	{
 		if (e.type == SDL_KEYDOWN)
 		{
+			// Player 1 inputs
 			if (e.key.keysym.sym == SDLK_z)
 			{
 				inputStateLeft.paddleUp = true;
@@ -82,6 +83,7 @@ bool handleInput()
 			{
 				inputStateLeft.paddleDown = true;
 			}
+			//Player 2 inputs (needs Paddle::update() in main update() to work)
 			if (e.key.keysym.sym == SDLK_i)
 			{
 				inputStateRight.paddleUp = true;
@@ -121,7 +123,7 @@ void update(SDL_Renderer* renderer)
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
 	leftPaddle.update(&inputStateLeft, SCREEN_HEIGHT);
-	rightPaddle.updateAi(SCREEN_HEIGHT, ball.y); // for player two use update()
+	rightPaddle.updateAi(SCREEN_HEIGHT, ball.y); // for player two use Paddle::update(&inputStateRight)
 
 	//COLLISIONS
 	SDL_Rect ballRect = ball.toRect();
@@ -141,7 +143,7 @@ void update(SDL_Renderer* renderer)
 	{
 		++playerScore;
 		ball.setX(SCREEN_WIDTH / 2);
-		char newText[3];
+		char newText[3]; // Buffer error if score gets to 100, change buffer size here, in text.h and text.cpp -> load()
 		sprintf_s(newText, "%d", playerScore);
 		playerScoreText.changeText(renderer, newText);
 	}

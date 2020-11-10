@@ -11,7 +11,7 @@ public:
 	void draw(SDL_Renderer* renderer);
 	SDL_Rect toRect();
 	void update(InputState* inputState, int SCREEN_HEIGHT);
-	void moveUp(int SCREEN_HEIGHT);
+	void moveUp();
 	void moveDown(int SCREEN_HEIGHT);
 	void updateAi(int SCREEN_HEIGHT, int ballY);
 

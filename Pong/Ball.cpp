@@ -14,12 +14,12 @@ Ball::~Ball()
 {
 
 }
-SDL_Rect Ball::toRect()
+SDL_Rect Ball::toRect() //Creates rectangle using values set in constructor
 {
 	SDL_Rect rect = { x,y,w,h };
 	return rect;
 }
-void Ball::draw(SDL_Renderer* renderer)
+void Ball::draw(SDL_Renderer* renderer) //Calls toRect() to create rectangle, draw rectangle
 {
 	SDL_Rect rect = toRect();
 	SDL_RenderFillRect(renderer, &rect);
@@ -28,6 +28,8 @@ void Ball::update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
 	x += speedX;
 	y += speedY;
+
+	// Makes ball bounce if it hits to or bottom of screen
 	if (y<0)
 	{
 		verticalBounce(0);
@@ -36,24 +38,16 @@ void Ball::update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 	{
 		verticalBounce((SCREEN_HEIGHT - h));
 	}
-	//if (x<0)
-	//{
-	//	horizontalBounce(0);
-	//}
-	//if (x > (SCREEN_WIDTH - w))
-	//{
-	//	horizontalBounce((SCREEN_WIDTH - w));
-	//}
 }
-void Ball::horizontalBounce(int xReplace)
+void Ball::horizontalBounce(int xReplace) //Used in Main -> update() in case of collision with Paddles
 {
-	speedX *= -1;
-	x = xReplace;
+	speedX *= -1; // reverse speed
+	x = xReplace; //set x 
 }
 void Ball::verticalBounce(int yReplace)
 {
-	speedY *= -1;
-	y = yReplace;
+	speedY *= -1; //reverse speed
+	y = yReplace; //set y to yReplace (screen edge position)
 }
 void Ball::setX(int newX)
 {
