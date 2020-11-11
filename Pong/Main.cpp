@@ -6,6 +6,7 @@
 #include"Paddle.h"
 #include"InputState.h"
 #include"Text.h"
+#include"SoundEffect.h"
 
 
 
@@ -18,10 +19,18 @@ Paddle leftPaddle = Paddle(0, 200, 128, 32, 4); //(x,y,h,w,speedY)
 Paddle rightPaddle = Paddle((SCREEN_WIDTH-32), 200, 128, 32, 4);
 InputState inputStateLeft = InputState();
 InputState inputStateRight = InputState(); // use in update() for player 2 control
-Text playerScoreText = Text(120, 100, 25, 50);
-Text opponentScoreText = Text(650, 100, 25, 50);
+Text playerScoreText = Text(120, 50, 25, 50); // (w,y,w,h)
+Text opponentScoreText = Text(650, 50, 25, 50);
+Text resultText = Text(SCREEN_WIDTH/2-50, SCREEN_HEIGHT/2, 100, 25);
+int result = 0; //0 = gameplaying, 1 = player win, 2 = ai wins/player 2 win
 int playerScore = 0;
 int opponentScore = 0;
+
+// SOUNDS
+SoundEffect victorySound = SoundEffect("victory.wav");
+SoundEffect paddleHitSound = SoundEffect("paddleHit.wav");
+SoundEffect scoreSound = SoundEffect("score.wav");
+
 
 void load(SDL_Renderer* renderer); //loads score texts
 bool handleInput(); //while loop over events to check for type of input and call appropriate functions, returns bool
@@ -41,6 +50,7 @@ int main(int argc, char** argv)
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	TTF_Init();
 	Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
 	//LOAD
 	load(renderer);
@@ -66,6 +76,10 @@ void load(SDL_Renderer* renderer)
 {
 	playerScoreText.load(renderer, "0");
 	opponentScoreText.load(renderer, "0");
+	resultText.load(renderer, "");
+	scoreSound.load();
+	victorySound.load();
+	paddleHitSound.load();
 }
 bool handleInput()
 {
@@ -121,39 +135,63 @@ bool handleInput()
 }
 void update(SDL_Renderer* renderer)
 {
-	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
-	leftPaddle.update(&inputStateLeft, SCREEN_HEIGHT);
-	rightPaddle.updateAi(SCREEN_HEIGHT, ball.y); // for player two use Paddle::update(&inputStateRight)
+	if (result == 0)
+	{
+		ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
+		leftPaddle.update(&inputStateLeft, SCREEN_HEIGHT);
+		rightPaddle.updateAi(SCREEN_HEIGHT, ball.y); // for player two use Paddle::update(&inputStateRight)
 
-	//COLLISIONS
-	SDL_Rect ballRect = ball.toRect();
-	SDL_Rect leftPaddleRect = leftPaddle.toRect();
-	SDL_Rect rightPaddleRect = rightPaddle.toRect();
-	if (AABBcollision(&ballRect, &leftPaddleRect))
-	{
-		ball.horizontalBounce(leftPaddleRect.x + leftPaddleRect.w);
-	}
-	else if (AABBcollision(&ballRect, &rightPaddleRect))
-	{
-		ball.horizontalBounce(rightPaddleRect.x - rightPaddleRect.w);
-	}
+		//COLLISIONS
+		SDL_Rect ballRect = ball.toRect();
+		SDL_Rect leftPaddleRect = leftPaddle.toRect();
+		SDL_Rect rightPaddleRect = rightPaddle.toRect();
+		if (AABBcollision(&ballRect, &leftPaddleRect))
+		{
+			ball.horizontalBounce(leftPaddleRect.x + leftPaddleRect.w);
+			paddleHitSound.play();
+		}
+		else if (AABBcollision(&ballRect, &rightPaddleRect))
+		{
+			ball.horizontalBounce(rightPaddleRect.x - rightPaddleRect.w);
+			paddleHitSound.play();
+		}
 
-	// POINTS
-	if (ball.getX() > SCREEN_WIDTH - ball.getWidth())
-	{
-		++playerScore;
-		ball.setX(SCREEN_WIDTH / 2);
-		char newText[3]; // Buffer error if score gets to 100, change buffer size here, in text.h and text.cpp -> load()
-		sprintf_s(newText, "%d", playerScore);
-		playerScoreText.changeText(renderer, newText);
+		// POINTS
+		if (ball.getX() > SCREEN_WIDTH - ball.getWidth())
+		{
+			++playerScore;
+			ball.setX(SCREEN_WIDTH / 2);
+			char newText[3]; // Buffer error if score gets to 100, change buffer size here, in text.h and text.cpp -> load()
+			sprintf_s(newText, "%d", playerScore);
+			playerScoreText.changeText(renderer, newText);
+			scoreSound.play();
+
+			if (playerScore >= 7)
+			{
+				result = 1;
+				resultText.changeText(renderer, "Player 1 wins!");
+				victorySound.play();
+			}
+		}
+		else if (ball.getX() < 0)
+		{
+			++opponentScore;
+			ball.setX(SCREEN_WIDTH / 2);
+			char newText[3];
+			sprintf_s(newText, "%d", opponentScore);
+			opponentScoreText.changeText(renderer, newText);
+			scoreSound.play();
+			if (opponentScore >= 7)
+			{
+				result = 1;
+				resultText.changeText(renderer, "Computer wins!");
+				victorySound.play();
+			}
+		}
 	}
-	else if (ball.getX() < 0)
+	else
 	{
-		++opponentScore;
-		ball.setX(SCREEN_WIDTH / 2);
-		char newText[3];
-		sprintf_s(newText, "%d", opponentScore);
-		opponentScoreText.changeText(renderer, newText);
+
 	}
 }
 void draw(SDL_Renderer* renderer)
@@ -164,6 +202,7 @@ void draw(SDL_Renderer* renderer)
 	SDL_SetRenderDrawColor(renderer, 0XFF, 0XFF, 0XFF, 0XFF);
 	playerScoreText.draw(renderer);
 	opponentScoreText.draw(renderer);
+	resultText.draw(renderer);
 	ball.draw(renderer);
 	leftPaddle.draw(renderer);
 	rightPaddle.draw(renderer);
@@ -174,6 +213,7 @@ void close(SDL_Window* window, SDL_Renderer* renderer)
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	Mix_CloseAudio();
 	Mix_Quit();
 	TTF_Quit();
 	SDL_Quit();
