@@ -11,9 +11,10 @@ bool quit = false;
 
 Ball ball = Ball(0, 100, 32, 32, 6, 6);
 Paddle paddle = Paddle(350, 380, 100, 20, 6);
+InputState inputState = InputState();
 
 void draw(SDL_Renderer* renderer);
-void update();
+void update(InputState* inputState);
 bool handleInput();
 void close(SDL_Window* window, SDL_Renderer* renderer);
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB);
@@ -33,7 +34,7 @@ int main(int argc, char** argv)
 	while (!quit)
 	{
 		quit = handleInput();
-		update();
+		update(&inputState);
 		draw(renderer);
 	}
 	close(window, renderer);
@@ -58,15 +59,15 @@ bool handleInput()
 	{
 		if (e.type == SDL_KEYDOWN)
 		{
-			//// Player 1 inputs
-			//if (e.key.keysym.sym == SDLK_z)
-			//{
-			//	inputStateLeft.paddleUp = true;
-			//}
-			//else if (e.key.keysym.sym == SDLK_s)
-			//{
-			//	inputStateLeft.paddleDown = true;
-			//}
+			// Player 1 inputs
+			if (e.key.keysym.sym == SDLK_q)
+			{
+				inputState.paddleLeft = true;
+			}
+			else if (e.key.keysym.sym == SDLK_s)
+			{
+				inputState.paddleRight = true;
+			}
 			////Player 2 inputs (needs Paddle::update() in main update() to work)
 			//if (e.key.keysym.sym == SDLK_i)
 			//{
@@ -77,25 +78,25 @@ bool handleInput()
 			//	inputStateRight.paddleDown = true;
 			//}
 		}
-		/*else if (e.type == SDL_KEYUP)
+		else if (e.type == SDL_KEYUP)
 		{
-			if (e.key.keysym.sym == SDLK_z)
+			if (e.key.keysym.sym == SDLK_q)
 			{
-				inputStateLeft.paddleUp = false;
+				inputState.paddleLeft = false;
 			}
 			else if (e.key.keysym.sym == SDLK_s)
 			{
-				inputStateLeft.paddleDown = false;
+				inputState.paddleRight = false;
 			}
-			if (e.key.keysym.sym == SDLK_i)
-			{
-				inputStateRight.paddleUp = false;
-			}
-			else if (e.key.keysym.sym == SDLK_j)
-			{
-				inputStateRight.paddleDown = false;
-			}
-		}*/
+			//if (e.key.keysym.sym == SDLK_i)
+			//{
+			//	inputStateRight.paddleUp = false;
+			//}
+			//else if (e.key.keysym.sym == SDLK_j)
+			//{
+			//	inputStateRight.paddleDown = false;
+			//}
+		}
 		else if (e.type == SDL_QUIT)
 		{
 			return true;
@@ -113,9 +114,10 @@ void draw(SDL_Renderer* renderer)
 	paddle.draw(renderer);
 	SDL_RenderPresent(renderer);
 }
-void update()
+void update(InputState* inputState)
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
+	paddle.update(inputState, SCREEN_WIDTH);
 
 }
 void close(SDL_Window* window, SDL_Renderer* renderer)

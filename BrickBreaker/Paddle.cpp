@@ -30,19 +30,28 @@ void Paddle::draw(SDL_Renderer* renderer)
 void Paddle::moveLeft()
 {
 	x -= speedX;
-}
-void Paddle::moveRight()
-{
-	x += speedX;
-}
-void Paddle::update(const int SCREEN_WIDTH)
-{
 	if (x < 0)
 	{
 		x = 0;
 	}
-	else if (x > SCREEN_WIDTH)
+}
+void Paddle::moveRight(const int SCREEN_WIDTH)
+{
+	x += speedX;
+	if (x > SCREEN_WIDTH)
 	{
-		x = SCREEN_WIDTH - w;
+	x = SCREEN_WIDTH - w;
 	}
+}
+void Paddle::update(InputState* inputState, const int SCREEN_WIDTH)
+{
+	if (inputState->paddleLeft)
+	{
+		moveLeft();
+	}
+	else if (inputState->paddleRight)
+	{
+		moveRight(SCREEN_WIDTH);
+	}
+	
 }
