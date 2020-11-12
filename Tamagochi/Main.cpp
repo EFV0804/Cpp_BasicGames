@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include "Tamagochi.h"
+#include"Farm.h"
 
 using std::cout;
 using std::endl;
@@ -11,9 +12,10 @@ int main(int argc, char** argv)
 {
 	bool quit = false;
 	string playerChoice;
-	Tamagochi tamagochiA ("Richard");
+	Tamagochi tamagochiA = Tamagochi("Richard");
 	cout << tamagochiA.getBoredom() << endl;
 	cout << tamagochiA.getHunger() << endl;
+
 
 	while (!quit)
 	{
