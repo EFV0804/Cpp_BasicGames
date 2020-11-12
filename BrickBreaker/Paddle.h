@@ -4,11 +4,11 @@
 class Paddle
 {
 public:
-	Paddle();
+	Paddle(int pX, int pY, int pW, int pH, int pSpeedX);
 	~Paddle();
 	SDL_Rect toRect();
-	void update();
-	void draw();
+	void update(const int SCREEN_WIDTH);
+	void draw(SDL_Renderer* renderer);
 	void moveLeft();
 	void moveRight();
 
