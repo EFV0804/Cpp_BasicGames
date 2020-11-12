@@ -10,7 +10,7 @@ const int SCREEN_HEIGHT = 400;
 bool quit = false;
 
 Ball ball = Ball(0, 100, 32, 32, 6, 6);
-Paddle paddle = Paddle(350, 380, 100, 20, 6);
+Paddle paddle = Paddle(350, 350, 100, 20, 6);
 InputState inputState = InputState();
 
 void draw(SDL_Renderer* renderer);
@@ -124,7 +124,7 @@ void update(InputState* inputState)
 
 	if (AABBCollision(&rectBall, &rectPaddle))
 	{
-		ball.verticalBounce(rectPaddle.x + rectPaddle.h);
+		ball.verticalBounce(rectPaddle.y-rectBall.h);
 	}
 
 }

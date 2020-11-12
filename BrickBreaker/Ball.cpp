@@ -22,23 +22,18 @@ void Ball::update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 	{
 		horizontalBounce(0);
 	}
-	else if (x > SCREEN_WIDTH-w)
+	if (x > SCREEN_WIDTH-w)
 	{
 		horizontalBounce(SCREEN_WIDTH - w);
 	}
-	else if (y < 0)
+	if (y < 0)
 	{
 		verticalBounce(0);
 	}
-	else if (y > SCREEN_HEIGHT-h)
+	if (y > SCREEN_HEIGHT-h)
 	{
 		verticalBounce(SCREEN_HEIGHT-h);
 	}
-}
-void Ball::draw(SDL_Renderer* renderer)
-{
-	SDL_Rect rect = toRect();
-	SDL_RenderFillRect(renderer, &rect);
 }
 void Ball::verticalBounce(int yReplace)
 {
@@ -49,4 +44,9 @@ void Ball::horizontalBounce(int xReplace)
 {
 	speedX *= -1;
 	x = xReplace;
+}
+void Ball::draw(SDL_Renderer* renderer)
+{
+	SDL_Rect rect = toRect();
+	SDL_RenderFillRect(renderer, &rect);
 }
