@@ -13,8 +13,17 @@ int main(int argc, char** argv)
 	bool quit = false;
 	string playerChoice;
 	Tamagochi tamagochiA = Tamagochi("Richard");
+	Tamagochi tamagochiB = Tamagochi("Willy");
+	Tamagochi* pTamagochiA = nullptr;
+	pTamagochiA = &tamagochiA;
+	Tamagochi* pTamagochiB = nullptr;
+	pTamagochiB = &tamagochiB;
 	cout << tamagochiA.getBoredom() << endl;
 	cout << tamagochiA.getHunger() << endl;
+	Farm farmA = Farm();
+	farmA.add(pTamagochiA);
+	farmA.add(pTamagochiB);
+	farmA.rollCall();
 
 
 	while (!quit)
