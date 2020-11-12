@@ -18,7 +18,7 @@ array<char, 9> boardUpdate(int playerTurn, int playerInput, array<char, 9>& boar
 array<char, 9> boardUpdateCPU(int playerTurn, array<char, 9>& boardValues, int cpuInput);
 bool isSuccessPlayerO(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO);
 bool isSuccessPlayerX(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerX);
-//bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO, char playerX);
+bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO, char playerX);
 int cpuMove(array<array<int, 3>, 8> winCons, array<char, 9> boardValues, char playerX, char playerO, int& cpuInput);
 
 
@@ -65,15 +65,15 @@ int main(int argc, char** argv)
 		//While loop variables
 	bool success = false;
 	bool quit = false;
+	bool tie = false;
 
 		//For loops variables
 	int a = 0;
 	int i = 0;
 	int counter = 0;
-	bool tie = false;
 
 	// GAME LOOP
-	while (!success/* && !tie*/)
+	while (!success && !tie)
 	{
 		
 		if (playerTurn == 1 )
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
 				boardUpdate(playerTurn, playerInput, boardValues);
 				boardDisplay(boardValues);
 				success = isSuccessPlayerO(boardValues, winCons, playerO);
-				/*tie = isTie(boardValues, winCons, playerO, playerX);*/
+				tie = isTie(boardValues, winCons, playerO, playerX);
 				playerTurn = 2;
 		}
 		else
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 			boardUpdateCPU(playerTurn, boardValues, cpuInput);
 			boardDisplay(boardValues);
 			success = isSuccessPlayerX(boardValues, winCons, playerX);
-			/*tie = isTie(boardValues, winCons, playerO, playerX);*/
+			tie = isTie(boardValues, winCons, playerO, playerX);
 			playerTurn = 1;
 		}
 	}
@@ -212,116 +212,87 @@ bool isSuccessPlayerX(array<char, 9> boardValues, array<array<int, 3>, 8> winCon
 	return false;
 }
  /*isTie(): do better than counting moves, use cpuMove type loop to check winCons*/
-//bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons,  char playerO, char playerX)
-//{
-//	int counterO = 0;
-//	int counterX = 0;
-//	int tied = 0;
-//	for (int a = 0; a < 8; a++)
-//	{
-//		for (int i = 0; i < 3; i++)
-//		{
-//			if (boardValues[winCons[a][i]] == playerO)
-//			{
-//				counterO++;
-//			}
-//			else if (boardValues[winCons[a][i]] == playerX)
-//			{
-//				counterX++;
-//			}
-//			else if (counterO == 1 && counterX == 1)
-//			{
-//				tied++;
-//				cout << "tied is : " << tied << endl;
-//			}
-//			else if (counterO == 2 && counterX == 1)
-//			{
-//				tied++;
-//				cout << "tied is : " << tied << endl;
-//			}
-//			else if (counterO == 1 && counterX == 2)
-//			{
-//				tied++;
-//				cout << "tied is : " << tied << endl;
-//			}
-//
-//		}
-//	}
-//	if (tied == 8)
-//	{
-//		cout << "it's a tie" << endl;
-//		return true;
-//	}
-//}
+bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons,  char playerO, char playerX)
+{
+	for (int a = 0; a < 8; a++) //Loops over winCons
+	{
+		int freeSpot = 0;
+		int counterX = 0;
+		int counterO = 0;
+		for (int i = 0; i < 3; i++) //Loops over boardValues inside winCons
+		{
+			if (boardValues[winCons[a][i]] == playerX) //Check and mark if cell is taken by x
+			{
+				counterX++;
+			}
+			else if (boardValues[winCons[a][i]] == playerO) //Check and mark if cell is taken by o
+			{
+				counterO++;
+			}
+			else if ((boardValues[winCons[a][i]] != playerX) && (boardValues[winCons[a][i]] != playerO)) //Check and mark if cell is not taken
+			{
+				freeSpot++;
+			}
+		}
+		if (counterX == 2 && counterO == 0) //Check if Ai can win
+		{
+			cout << "Player 2 can still win" << endl;
+			return false;
+			break;
+		}
+		else if (counterO == 2 && counterX == 0) //Check if player can win
+		{
+			cout << "Player 1 can still win" << endl;
+			return false;
+			break;
+		}
+		else if (freeSpot >= 2)
+		{
+			cout << "Free spots available" << endl;
+			return false;
+			break;
+		}
+	}
+	cout << "it's a tie" << endl;
+	return true;
+}
 int cpuMove(array<array<int, 3>, 8> winCons, array<char, 9> boardValues, char playerX, char playerO, int& cpuInput)
 {
-	// Loop to check for victory moves
-	for (int a = 0; a < 8; a++)
+	for (int a = 0; a < 8; a++) //Loops over winCons
 	{
 		int freeSpot;
 		int counterX = 0;
 		int counterO = 0;
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++) //Loops over boardValues inside winCons
 		{
-			if (boardValues[winCons[a][i]] == playerX)
+			if (boardValues[winCons[a][i]] == playerX) //Check and mark if cell is taken by x
 			{
 				counterX++;
 			}
-			else if (boardValues[winCons[a][i]] == playerO)
+			else if (boardValues[winCons[a][i]] == playerO) //Check and mark if cell is taken by o
 			{
 				counterO++;
 			}
-			else if ((boardValues[winCons[a][i]] != playerX) && (boardValues[winCons[a][i]] != playerO))
+			else if ((boardValues[winCons[a][i]] != playerX) && (boardValues[winCons[a][i]] != playerO)) //Check and mark if cell is not taken
 			{
 				freeSpot = winCons[a][i];
 			}
 		}
-		if (counterX == 2 && counterO == 0)
+		if (counterX == 2 && counterO == 0) //Check if Ai can win
 		{
 			cpuInput = freeSpot;
 			return cpuInput;
 			break;
 		}
-		else if (counterO == 2 && counterX == 0)
+		else if (counterO == 2 && counterX == 0) //Check if player can win
 		{
 			cpuInput = freeSpot;
 			return cpuInput;
 			break;
 		}
 	}
-	// Loop to check for player1 victory moves
-	/*for (int a = 0; a < 8; a++)
-	{
-		int freeSpot;
-		int counterX = 0;
-		int counterO = 0;
-		cout << "current array for P1 victory moves is " << a << endl;
-		for (int i = 0; i < 3; i++)
-		{
-			if (boardValues[winCons[a][i]] == playerO)
-			{
-				counterO++;
-				cout << "counterO is " << counterO << endl;
-			}
-			else if (boardValues[winCons[a][i]] == playerX)
-			{
-				counterX++;
-				cout << "counterX is " << counterX << endl;
-			}
-			else if ((boardValues[winCons[a][i]] != playerX) && (boardValues[winCons[a][i]] != playerO))
-			{
-				freeSpot = winCons[a][i];
-				cout << "freeSpot is " << freeSpot << endl;
-			}
-		}
-		if (counterO == 2 && counterX == 0)
-		{
-			cpuInput = freeSpot;
-			cout << "cpuInput is " << cpuInput << endl;
-			return cpuInput;
-			break;
-		}
-	}*/
+
+	//Take center if available or corners
 	if (boardValues[4] == '4')
 	{
 		cpuInput = 4;
@@ -343,5 +314,4 @@ int cpuMove(array<array<int, 3>, 8> winCons, array<char, 9> boardValues, char pl
 		cpuInput = 8;
 	}
 	return cpuInput;
-	//Take center if available or corners
 }
