@@ -119,6 +119,14 @@ void update(InputState* inputState)
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
 	paddle.update(inputState, SCREEN_WIDTH);
 
+	SDL_Rect rectBall = ball.toRect();
+	SDL_Rect rectPaddle = paddle.toRect();
+
+	if (AABBCollision(&rectBall, &rectPaddle))
+	{
+		ball.verticalBounce(rectPaddle.x + rectPaddle.h);
+	}
+
 }
 void close(SDL_Window* window, SDL_Renderer* renderer)
 {

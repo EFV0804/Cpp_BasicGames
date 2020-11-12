@@ -19,5 +19,4 @@ private:
 	int w;
 	int h;
 	int speedX;
-	int speedY;
 };

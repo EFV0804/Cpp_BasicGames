@@ -38,7 +38,7 @@ void Paddle::moveLeft()
 void Paddle::moveRight(const int SCREEN_WIDTH)
 {
 	x += speedX;
-	if (x > SCREEN_WIDTH)
+	if (x > SCREEN_WIDTH-w)
 	{
 	x = SCREEN_WIDTH - w;
 	}
@@ -53,5 +53,4 @@ void Paddle::update(InputState* inputState, const int SCREEN_WIDTH)
 	{
 		moveRight(SCREEN_WIDTH);
 	}
-	
 }
