@@ -16,9 +16,9 @@ void boardDisplay(array<char, 9> boardValues);
 void boardInit(array<char, 9> boardValues);
 array<char, 9> boardUpdate(int playerTurn, int playerInput, array<char, 9>& boardValues);
 array<char, 9> boardUpdateCPU(int playerTurn, array<char, 9>& boardValues, int cpuInput);
-bool isSuccessPlayerO(bool* pSuccess, array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO);
-bool isSuccessPlayerX(bool* pSuccess, array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerX);
-bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO, char playerX, bool& tie);
+bool isSuccessPlayerO(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO);
+bool isSuccessPlayerX(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerX);
+//bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO, char playerX);
 int cpuMove(array<array<int, 3>, 8> winCons, array<char, 9> boardValues, char playerX, char playerO, int& cpuInput);
 
 
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 	cout << "The starting player is Player " << playerTurn <<endl;
 	boardInit(boardValues);
 
-	// GAME LOOP
+	
 	int playerInput;
 	int* pPlayerInput = nullptr;
 	pPlayerInput = &playerInput;
@@ -64,7 +64,6 @@ int main(int argc, char** argv)
 
 		//While loop variables
 	bool success = false;
-	bool* pSuccess = &success;
 	bool quit = false;
 
 		//For loops variables
@@ -72,9 +71,9 @@ int main(int argc, char** argv)
 	int i = 0;
 	int counter = 0;
 	bool tie = false;
-	bool* pTie = &tie;
 
-	while (*pSuccess == false && tie == false)
+	// GAME LOOP
+	while (!success/* && !tie*/)
 	{
 		
 		if (playerTurn == 1 )
@@ -93,8 +92,8 @@ int main(int argc, char** argv)
 			}
 				boardUpdate(playerTurn, playerInput, boardValues);
 				boardDisplay(boardValues);
-				isSuccessPlayerO(pSuccess, boardValues, winCons, playerO);
-				isTie(boardValues, winCons, playerO, playerX, tie);
+				success = isSuccessPlayerO(boardValues, winCons, playerO);
+				/*tie = isTie(boardValues, winCons, playerO, playerX);*/
 				playerTurn = 2;
 		}
 		else
@@ -113,8 +112,8 @@ int main(int argc, char** argv)
 			cpuMove(winCons, boardValues, playerX, playerO, cpuInput);
 			boardUpdateCPU(playerTurn, boardValues, cpuInput);
 			boardDisplay(boardValues);
-			isSuccessPlayerX(pSuccess, boardValues, winCons, playerX);
-			isTie(boardValues, winCons, playerO, playerX, tie);
+			success = isSuccessPlayerX(boardValues, winCons, playerX);
+			/*tie = isTie(boardValues, winCons, playerO, playerX);*/
 			playerTurn = 1;
 		}
 	}
@@ -158,7 +157,7 @@ array<char, 9> boardUpdateCPU(int playerTurn, array<char, 9>& boardValues, int c
 	boardValues[cpuInput] = 'x';
 	return boardValues;
 }
-bool isSuccessPlayerO(bool* pSuccess, array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO)
+bool isSuccessPlayerO(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerO)
 {
 	int a = 0;
 	int i = 0;
@@ -179,18 +178,13 @@ bool isSuccessPlayerO(bool* pSuccess, array<char, 9> boardValues, array<array<in
 		}
 		if (counter == 3)
 		{
-			cout << "Victory! Congratulations Player 2!" << endl;
-			*pSuccess = true;
-			break;
+			cout << "Victory! Congratulations Player 1!" << endl;
+			return true;
 		}
 	}
-	if (!*pSuccess)
-	{
-		cout << "no victory conditions met" << endl;
-	}
-	return *pSuccess;
+	return false;
 }
-bool isSuccessPlayerX(bool* pSuccess, array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerX)
+bool isSuccessPlayerX(array<char, 9> boardValues, array<array<int, 3>, 8> winCons, char playerX)
 {
 	int a = 0;
 	int i = 0;
@@ -212,59 +206,53 @@ bool isSuccessPlayerX(bool* pSuccess, array<char, 9> boardValues, array<array<in
 		if (counter == 3)
 		{
 			cout << "Victory! Congratulations Player 2!" << endl;
-			*pSuccess = true;
-			break;
+			return true;
 		}
 	}
-	if (!*pSuccess)
-	{
-		cout << "no victory conditions met" << endl;
-	}
-	return *pSuccess;
+	return false;
 }
  /*isTie(): do better than counting moves, use cpuMove type loop to check winCons*/
-bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons,  char playerO, char playerX, bool& tie)
-{
-	int counterO = 0;
-	int counterX = 0;
-	int tied = 0;
-	for (int a = 0; a < 8; a++)
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			if (boardValues[winCons[a][i]] == playerO)
-			{
-				counterO++;
-			}
-			else if (boardValues[winCons[a][i]] == playerX)
-			{
-				counterX++;
-			}
-			else if (counterO == 1 && counterX == 1)
-			{
-				tied++;
-				cout << "tied is : " << tied << endl;
-			}
-			else if (counterO == 2 && counterX == 1)
-			{
-				tied++;
-				cout << "tied is : " << tied << endl;
-			}
-			else if (counterO == 1 && counterX == 2)
-			{
-				tied++;
-				cout << "tied is : " << tied << endl;
-			}
-
-		}
-	}
-	if (tied == 8)
-	{
-		tie = true;
-		cout << "it's a tie" << endl;
-		return tie;
-	}
-}
+//bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons,  char playerO, char playerX)
+//{
+//	int counterO = 0;
+//	int counterX = 0;
+//	int tied = 0;
+//	for (int a = 0; a < 8; a++)
+//	{
+//		for (int i = 0; i < 3; i++)
+//		{
+//			if (boardValues[winCons[a][i]] == playerO)
+//			{
+//				counterO++;
+//			}
+//			else if (boardValues[winCons[a][i]] == playerX)
+//			{
+//				counterX++;
+//			}
+//			else if (counterO == 1 && counterX == 1)
+//			{
+//				tied++;
+//				cout << "tied is : " << tied << endl;
+//			}
+//			else if (counterO == 2 && counterX == 1)
+//			{
+//				tied++;
+//				cout << "tied is : " << tied << endl;
+//			}
+//			else if (counterO == 1 && counterX == 2)
+//			{
+//				tied++;
+//				cout << "tied is : " << tied << endl;
+//			}
+//
+//		}
+//	}
+//	if (tied == 8)
+//	{
+//		cout << "it's a tie" << endl;
+//		return true;
+//	}
+//}
 int cpuMove(array<array<int, 3>, 8> winCons, array<char, 9> boardValues, char playerX, char playerO, int& cpuInput)
 {
 	// Loop to check for victory moves
