@@ -17,7 +17,6 @@ private:
 	"When you pour Coca-Cola on your keyboard, it stops working.",
 	"When people use the word 'quantum', 99% of the time, it just means they don't have a clue what they're talking about.",
 	"Did you know that most boring facts are made up? Now that's interesting." };
-	void passTime();
 public:
 	string name;
 	string getName() const { return name; }
@@ -25,6 +24,7 @@ public:
 	void talk();
 	void play();
 	void eat();
+	void passTime();
 	int hunger;
 	int boredom;
 	int mood();

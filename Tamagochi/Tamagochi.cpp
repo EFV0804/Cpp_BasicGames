@@ -45,7 +45,7 @@ void Tamagochi::talk()
 	}
 	else if (boredom > 7)
 	{
-		cout << "I have started to grasp my own mortality." << endl;
+		cout <<name<< "says: I have started to grasp my own mortality." << endl;
 		cout <<"You might want to play with "<< name << " before it starts quoting Nietzsche..." << endl;
 	}
 	passTime();

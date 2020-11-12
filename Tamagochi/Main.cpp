@@ -30,6 +30,11 @@ int main(int argc, char** argv)
 		{
 			tamagochiA.play();
 		}
+		else if (playerChoice == "pass")
+		{
+			cout << tamagochiA.name << " stares at you blankly." << endl;
+			tamagochiA.passTime();
+		}
 		else if (playerChoice == "quit")
 		{
 			quit = true;
@@ -38,7 +43,7 @@ int main(int argc, char** argv)
 }
 void interactionChoices(string& playerChoice)
 {
-	cout << "Do you want to listen to your Tamagochi, feed it, play with it or quit the game?" << endl;
-	cout << "Please type your choice (listen, feed, play, quit)" << endl;
+	cout << "Do you want to listen to your Tamagochi, feed it, play with it, pass some time or quit the game?" << endl;
+	cout << "Please type your choice (listen, feed, play, pass, quit)" << endl;
 	cin >> playerChoice;
 }
