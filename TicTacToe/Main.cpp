@@ -99,16 +99,6 @@ int main(int argc, char** argv)
 		else
 		{
 			cout << "Computer's turn to play: " << endl;
-			/*while (playerInput > 8)
-			{
-				cout << "Invalid input. Pick a number between 0 and 8" << endl;
-				cin >> playerInput;
-			}
-			while (boardValues[playerInput] == playerO || boardValues[playerInput] == playerX)
-			{
-				cout << "Sorry already taken, choose again." << endl;
-				cin >> playerInput;
-			}*/
 			cpuMove(winCons, boardValues, playerX, playerO, cpuInput);
 			boardUpdateCPU(playerTurn, boardValues, cpuInput);
 			boardDisplay(boardValues);
@@ -130,7 +120,7 @@ void instructions()
 }
 void boardDisplay(array<char,9> boardValues)
 {
-	/*system("cls");*/
+	system("cls");
 	cout << " " << boardValues[0] << " " << "|" << " " << boardValues[1] << " " << "|" << " " << boardValues[2] << " " << endl;
 	cout << "----" << "---" << "----" << endl;
 	cout << " " << boardValues[3] << " " << "|" << " " << boardValues[4] << " " << "|" << " " << boardValues[5] << " " << endl;
@@ -211,7 +201,6 @@ bool isSuccessPlayerX(array<char, 9> boardValues, array<array<int, 3>, 8> winCon
 	}
 	return false;
 }
- /*isTie(): do better than counting moves, use cpuMove type loop to check winCons*/
 bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons,  char playerO, char playerX)
 {
 	for (int a = 0; a < 8; a++) //Loops over winCons
@@ -236,19 +225,16 @@ bool isTie(array<char, 9> boardValues, array<array<int, 3>, 8> winCons,  char pl
 		}
 		if (counterX == 2 && counterO == 0) //Check if Ai can win
 		{
-			cout << "Player 2 can still win" << endl;
 			return false;
 			break;
 		}
 		else if (counterO == 2 && counterX == 0) //Check if player can win
 		{
-			cout << "Player 1 can still win" << endl;
 			return false;
 			break;
 		}
 		else if (freeSpot >= 2)
 		{
-			cout << "Free spots available" << endl;
 			return false;
 			break;
 		}
