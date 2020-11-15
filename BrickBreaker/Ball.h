@@ -18,9 +18,9 @@ public:
 	bool isBallReset = false;
 	int y;
 	int h;
+	int w;
 private:
 	int x;
-	int w;
 	int speedY;
 	int speedX;
 };

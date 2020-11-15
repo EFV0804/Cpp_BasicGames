@@ -26,6 +26,10 @@ const int Paddle::getX()
 {
 	return x;
 }
+const int Paddle::getW()
+{
+	return w;
+}
 const int Paddle::getY()
 {
 	return y;

@@ -53,11 +53,11 @@ void Ball::update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, InputState* i
 	{
 		verticalBounce(0);
 	}
-	if (y > SCREEN_HEIGHT-h)
-	{
-		reset(350, 50); //Ball is reset in position and has zero speed
-		isBallReset = true; //Sets bool to true in order to triger conditional in inputHandle()
-	}
+	//if (y > SCREEN_HEIGHT-h)
+	//{
+	//	reset(350, 50); //Ball is reset in position and has zero speed
+	//	isBallReset = true; //Sets bool to true in order to triger conditional in inputHandle()
+	//}
 }
 void Ball::verticalBounce(int yReplace)
 {

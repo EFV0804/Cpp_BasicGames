@@ -66,16 +66,16 @@ bool handleInput()
 				inputState.paddleLeft = true;
 				if (ball.isBallReset) // if bool has been set to true in Ball::update()
 				{
-					ball.dirSet(&inputState);
+					ball.dirSet(&inputState); //sets ball speed to paddle direction
 					ball.isBallReset = false;
 				}
 			}
 			else if (e.key.keysym.sym == SDLK_s)
 			{
 				inputState.paddleRight = true;
-				if (ball.isBallReset)
+				if (ball.isBallReset) // if bool has been set to true in Ball::update()
 				{
-					ball.dirSet(&inputState);
+					ball.dirSet(&inputState); //sets ball speed to paddle direction
 					ball.isBallReset = false;
 				}
 			}
@@ -136,6 +136,11 @@ void update(InputState* inputState)
 	if (AABBCollision(&rectBall, &rectPaddle))
 	{
 		ball.verticalBounce(rectPaddle.y-rectBall.h);
+	}
+	if (ball.y > SCREEN_HEIGHT - ball.h)
+	{
+		ball.reset(paddle.getX()+(paddle.getW()/2) - ball.w/2, paddle.getY()); //Ball is reset in position and has zero speed
+		ball.isBallReset = true; //Sets bool to true in order to triger conditional in inputHandle()
 	}
 }
 void close(SDL_Window* window, SDL_Renderer* renderer)

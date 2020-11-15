@@ -14,6 +14,7 @@ public:
 	void moveRight(const int SCREEN_WIDTH);
 	const int getX(); //unavailable in Ball.cpp
 	const int getY();//unavailable in Ball.cpp
+	const int getW();
 
 
 private:
