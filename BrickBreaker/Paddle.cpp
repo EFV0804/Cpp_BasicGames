@@ -22,6 +22,14 @@ SDL_Rect Paddle::toRect()
 	SDL_Rect rect = { x,y,w,h };
 	return rect;
 }
+const int Paddle::getX()
+{
+	return x;
+}
+const int Paddle::getY()
+{
+	return y;
+}
 void Paddle::draw(SDL_Renderer* renderer)
 {
 	SDL_Rect rect = toRect();

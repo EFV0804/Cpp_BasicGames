@@ -12,11 +12,14 @@ public:
 	void draw(SDL_Renderer* renderer);
 	void moveLeft();
 	void moveRight(const int SCREEN_WIDTH);
+	const int getX(); //unavailable in Ball.cpp
+	const int getY();//unavailable in Ball.cpp
+
 
 private:
-	int x;
 	int y;
 	int w;
+	int x;
 	int h;
 	int speedX;
 };

@@ -9,8 +9,8 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 400;
 bool quit = false;
 
-Ball ball = Ball(0, 100, 32, 32, 6, 6);
-Paddle paddle = Paddle(350, 350, 100, 20, 6);
+Ball ball = Ball(0, 100, 16, 16, 6, 6);
+Paddle paddle = Paddle(350, 350, 64, 16, 6);
 InputState inputState = InputState();
 
 void draw(SDL_Renderer* renderer);
@@ -18,6 +18,7 @@ void update(InputState* inputState);
 bool handleInput();
 void close(SDL_Window* window, SDL_Renderer* renderer);
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB);
+
 int main(int argc, char** argv)
 {
 	SDL_Window* window = nullptr;
@@ -42,14 +43,14 @@ int main(int argc, char** argv)
 }
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB)
 {
-	int xMinA = rectA->x;
-	int xMaxA = rectA->x + rectA->w;
-	int yMinA = rectA->y;
-	int yMaxA = rectA->y + rectA->h;
-	int xMinB = rectB->x;
-	int xMaxB = rectB->x + rectB->w;
 	int yMinB = rectB->y;
 	int yMaxB = rectB->y + rectB->h;
+	int yMinA = rectA->y;
+	int yMaxA = rectA->y + rectA->h;
+	int xMinA = rectA->x;
+	int xMaxA = rectA->x + rectA->w;
+	int xMinB = rectB->x;
+	int xMaxB = rectB->x + rectB->w;
 	return !(xMinA > xMaxB || xMaxA < xMinB || yMinA > yMaxB || yMaxA < yMinB);
 }
 bool handleInput()
@@ -63,10 +64,20 @@ bool handleInput()
 			if (e.key.keysym.sym == SDLK_q)
 			{
 				inputState.paddleLeft = true;
+				if (ball.isBallReset) // if bool has been set to true in Ball::update()
+				{
+					ball.dirSet(&inputState);
+					ball.isBallReset = false;
+				}
 			}
 			else if (e.key.keysym.sym == SDLK_s)
 			{
 				inputState.paddleRight = true;
+				if (ball.isBallReset)
+				{
+					ball.dirSet(&inputState);
+					ball.isBallReset = false;
+				}
 			}
 			////Player 2 inputs (needs Paddle::update() in main update() to work)
 			//if (e.key.keysym.sym == SDLK_i)
@@ -116,7 +127,7 @@ void draw(SDL_Renderer* renderer)
 }
 void update(InputState* inputState)
 {
-	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT);
+	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT, inputState);
 	paddle.update(inputState, SCREEN_WIDTH);
 
 	SDL_Rect rectBall = ball.toRect();
@@ -126,7 +137,6 @@ void update(InputState* inputState)
 	{
 		ball.verticalBounce(rectPaddle.y-rectBall.h);
 	}
-
 }
 void close(SDL_Window* window, SDL_Renderer* renderer)
 {
