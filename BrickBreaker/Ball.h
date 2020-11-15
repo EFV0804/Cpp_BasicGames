@@ -15,10 +15,10 @@ public:
 	void speedSet(int speedYRep, int speedXrep);
 	void reset(const int pX, const int pY);
 	void dirSet(InputState* inputState);
-	bool isBallReset = false;
-	int y;
-	int h;
-	int w;
+	bool isBallReset = false; // used in Main inputHandle()
+	int y; //used in Main update()
+	int h; //used in Main update()
+	int w; //used in Main update()
 private:
 	int x;
 	int speedY;

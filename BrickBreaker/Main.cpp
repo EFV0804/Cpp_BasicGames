@@ -4,21 +4,24 @@
 #include<iostream>
 #include"Ball.h"
 #include"Paddle.h"
+#include"Text.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 400;
 bool quit = false;
+int ballCount = 5;
 
 Ball ball = Ball(0, 100, 16, 16, 6, 6);
 Paddle paddle = Paddle(350, 350, 64, 16, 6);
 InputState inputState = InputState();
+Text ballCountText = Text(50,50,20,50);
 
 void draw(SDL_Renderer* renderer);
-void update(InputState* inputState);
+void update(InputState* inputState, SDL_Renderer* renderer);
 bool handleInput();
 void close(SDL_Window* window, SDL_Renderer* renderer);
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB);
-
+void load(SDL_Renderer* renderer);
 int main(int argc, char** argv)
 {
 	SDL_Window* window = nullptr;
@@ -32,14 +35,21 @@ int main(int argc, char** argv)
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
 	//LOAD
+	load(renderer);
+
+	//GAMELOOP
 	while (!quit)
 	{
 		quit = handleInput();
-		update(&inputState);
+		update(&inputState, renderer);
 		draw(renderer);
 	}
 	close(window, renderer);
 	return 0;
+}
+void load(SDL_Renderer* renderer)
+{
+	ballCountText.load(renderer, "5");
 }
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB)
 {
@@ -121,11 +131,12 @@ void draw(SDL_Renderer* renderer)
 	SDL_RenderClear(renderer);
 
 	SDL_SetRenderDrawColor(renderer, 0XFF, 0XFF, 0XFF, 0XFF);
+	ballCountText.draw(renderer);
 	ball.draw(renderer);
 	paddle.draw(renderer);
 	SDL_RenderPresent(renderer);
 }
-void update(InputState* inputState)
+void update(InputState* inputState, SDL_Renderer* renderer)
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT, inputState);
 	paddle.update(inputState, SCREEN_WIDTH);
@@ -140,6 +151,10 @@ void update(InputState* inputState)
 	if (ball.y > SCREEN_HEIGHT - ball.h)
 	{
 		ball.reset(paddle.getX()+(paddle.getW()/2) - ball.w/2, paddle.getY()); //Ball is reset in position and has zero speed
+		ballCount--;
+		char newText[3]; // Buffer error if score gets to 100, change buffer size here, in text.h and text.cpp -> load()
+		sprintf_s(newText, "%d", ballCount);
+		ballCountText.changeText(renderer, newText);
 		ball.isBallReset = true; //Sets bool to true in order to triger conditional in inputHandle()
 	}
 }

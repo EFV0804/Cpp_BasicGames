@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include"Paddle.h"
+#include<cstdio> 
 
 Ball::Ball(int pX, int pY, int pW, int pH, int pSpeedX, int pSpeedY)
 	:x(pX), y(pY), w(pW), h(pH), speedX(pSpeedX), speedY(pSpeedY)
