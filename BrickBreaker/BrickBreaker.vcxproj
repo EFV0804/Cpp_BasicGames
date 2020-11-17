@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="Text.cpp" />

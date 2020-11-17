@@ -4,11 +4,12 @@
 class Brick
 {
 public:
-	Brick();
+	Brick(int pX, int pY);
 	~Brick();
 	SDL_Rect toRect();
-	void draw();
+	void draw(SDL_Renderer* renderer);
 	void update();
+
 private:
 	int x;
 	int y;

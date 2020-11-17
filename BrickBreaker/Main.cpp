@@ -5,6 +5,15 @@
 #include"Ball.h"
 #include"Paddle.h"
 #include"Text.h"
+#include"Brick.h"
+#include<array>
+#include<string>
+#include<cstdio>
+#include<vector>
+
+using std::vector;
+using std::array;
+using std::string;
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 400;
@@ -16,12 +25,24 @@ Paddle paddle = Paddle(350, 350, 64, 16, 6);
 InputState inputState = InputState();
 Text ballCountText = Text(50,50,20,50);
 
+array <array<int, 2>, 6> brickCoordArray =
+{ {
+	{50,10},
+	{40,20},
+	{35,20},
+	{30,30},
+	{50,30},
+	{60,30}
+} };
+vector<Brick> brickVector;
+
 void draw(SDL_Renderer* renderer);
-void update(InputState* inputState, SDL_Renderer* renderer);
+bool update(InputState* inputState, SDL_Renderer* renderer);
 bool handleInput();
 void close(SDL_Window* window, SDL_Renderer* renderer);
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB);
 void load(SDL_Renderer* renderer);
+//void brickLayout(array<array<int, 2>, 6> brickCoordArray, vector<SDL_Rect*> brickVector);
 int main(int argc, char** argv)
 {
 	SDL_Window* window = nullptr;
@@ -36,7 +57,14 @@ int main(int argc, char** argv)
 
 	//LOAD
 	load(renderer);
-
+	for (int i = 0; i < 6; i++)
+	{
+		int x = brickCoordArray[i][0];
+		int y = brickCoordArray[i][1];
+		Brick brick = Brick(x, y);
+		brickVector.push_back(brick);
+		/*brickVector.push_back(new Brick(brickCoordArray[i][0], brickCoordArray[i][1]));*/
+	}
 	//GAMELOOP
 	while (!quit)
 	{
@@ -132,11 +160,15 @@ void draw(SDL_Renderer* renderer)
 
 	SDL_SetRenderDrawColor(renderer, 0XFF, 0XFF, 0XFF, 0XFF);
 	ballCountText.draw(renderer);
+	for (int i = 0; i < 6; i++)
+	{
+		brickVector.at(i).draw(renderer);
+	}
 	ball.draw(renderer);
 	paddle.draw(renderer);
 	SDL_RenderPresent(renderer);
 }
-void update(InputState* inputState, SDL_Renderer* renderer)
+bool update(InputState* inputState, SDL_Renderer* renderer)
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT, inputState);
 	paddle.update(inputState, SCREEN_WIDTH);
@@ -150,6 +182,11 @@ void update(InputState* inputState, SDL_Renderer* renderer)
 	}
 	if (ball.y > SCREEN_HEIGHT - ball.h)
 	{
+		if (ballCount == 0)
+		{
+			quit = true;
+			return ballCount;
+		}
 		ball.reset(paddle.getX()+(paddle.getW()/2) - ball.w/2, paddle.getY()); //Ball is reset in position and has zero speed
 		ballCount--;
 		char newText[3]; // Buffer error if score gets to 100, change buffer size here, in text.h and text.cpp -> load()
@@ -167,3 +204,12 @@ void close(SDL_Window* window, SDL_Renderer* renderer)
 	TTF_Quit();
 	SDL_Quit();
 }
+
+//void brickLayout(array<array<int, 2>, 6> brickCoordArray, vector<Brick*> brickVector)
+//{
+//	for (int i = 0; i < brickCoordArray.size(); i++)
+//	{
+//		brickVector.push_back(&Brick(brickCoordArray[i][0], brickCoordArray[i][1]));
+//	}
+//	//Add bricks to a vector and draw 
+//}
