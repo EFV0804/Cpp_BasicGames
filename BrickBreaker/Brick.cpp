@@ -3,8 +3,8 @@
 Brick::Brick(int pX, int pY)
 	:x(pX), y(pY)
 {
-	w = 10;
-	h = 10;
+	w = 30;
+	h = 30;
 }
 Brick::~Brick()
 {

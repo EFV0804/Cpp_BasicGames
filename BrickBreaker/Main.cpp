@@ -42,7 +42,8 @@ bool handleInput();
 void close(SDL_Window* window, SDL_Renderer* renderer);
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB);
 void load(SDL_Renderer* renderer);
-//void brickLayout(array<array<int, 2>, 6> brickCoordArray, vector<SDL_Rect*> brickVector);
+
+
 int main(int argc, char** argv)
 {
 	SDL_Window* window = nullptr;
@@ -175,6 +176,14 @@ bool update(InputState* inputState, SDL_Renderer* renderer)
 
 	SDL_Rect rectBall = ball.toRect();
 	SDL_Rect rectPaddle = paddle.toRect();
+	for (int i = 0; i < 6; i++)
+	{
+		SDL_Rect rectBrick = brickVector.at(i).toRect();
+		if (AABBCollision(&rectBall, &rectBrick))
+		{
+			ball.verticalBounce(rectBrick.y + rectBrick.h);
+		}
+	}
 
 	if (AABBCollision(&rectBall, &rectPaddle))
 	{
@@ -204,12 +213,3 @@ void close(SDL_Window* window, SDL_Renderer* renderer)
 	TTF_Quit();
 	SDL_Quit();
 }
-
-//void brickLayout(array<array<int, 2>, 6> brickCoordArray, vector<Brick*> brickVector)
-//{
-//	for (int i = 0; i < brickCoordArray.size(); i++)
-//	{
-//		brickVector.push_back(&Brick(brickCoordArray[i][0], brickCoordArray[i][1]));
-//	}
-//	//Add bricks to a vector and draw 
-//}
