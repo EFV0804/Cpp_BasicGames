@@ -16,11 +16,16 @@ public:
 	void reset(const int pX, const int pY);
 	void dirSet(InputState* inputState);
 	bool isBallReset = false; // used in Main inputHandle()
+
+	//TESTING
+	void inverseSpeed(int& speed);
+	int speedX;
+
+
 	int y; //used in Main update()
 	int h; //used in Main update()
 	int w; //used in Main update()
 private:
 	int x;
 	int speedY;
-	int speedX;
 };

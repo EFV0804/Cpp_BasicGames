@@ -22,7 +22,7 @@ bool winLose = false;
 int ballCount = 5;
 
 Ball ball = Ball(0, 100, 16, 16, 6, 6);
-Paddle paddle = Paddle(350, 350, 64, 16, 10);
+Paddle paddle = Paddle(350, 350, 200, 16, 10);
 InputState inputState = InputState();
 Text ballCountText = Text(50,50,20,50);
 
@@ -203,7 +203,30 @@ void update(InputState* inputState, SDL_Renderer* renderer)
 	//BALL AND PADDLE COLLISION
 	if (AABBCollision(&rectBall, &rectPaddle))
 	{
-		ball.verticalBounce(rectPaddle.y-rectBall.h);
+		if (ball.speedX > 0)
+		{
+			if (rectBall.x > rectPaddle.x + (rectPaddle.w / 2))
+			{
+				ball.verticalBounce(rectPaddle.y - rectBall.h);
+			}
+			else if (rectBall.x < rectPaddle.x + (rectPaddle.w / 2))
+			{
+				ball.verticalBounce(rectPaddle.y - rectBall.h);
+				ball.inverseSpeed(ball.speedX);
+			}
+		}
+		else if (ball.speedX < 0)
+		{
+			if (rectBall.x > rectPaddle.x + (rectPaddle.w / 2))
+			{
+				ball.verticalBounce(rectPaddle.y - rectBall.h);
+				ball.inverseSpeed(ball.speedX);
+			}
+			else if (rectBall.x < rectPaddle.x + (rectPaddle.w / 2))
+			{
+				ball.verticalBounce(rectPaddle.y - rectBall.h);
+			}
+		}
 	}
 	if (ball.y > SCREEN_HEIGHT - ball.h) //If ball goes out of bottom screen, the ball count is decremented and ball is reset on paddle.
 	{
