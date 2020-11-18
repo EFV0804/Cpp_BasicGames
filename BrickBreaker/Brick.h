@@ -9,6 +9,7 @@ public:
 	SDL_Rect toRect();
 	void draw(SDL_Renderer* renderer);
 	void update();
+	bool isDestroyed;
 
 private:
 	int x;

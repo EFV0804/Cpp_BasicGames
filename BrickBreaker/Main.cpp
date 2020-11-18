@@ -27,14 +27,15 @@ Text ballCountText = Text(50,50,20,50);
 
 array <array<int, 2>, 6> brickCoordArray =
 { {
-	{50,10},
-	{40,20},
-	{35,20},
-	{30,30},
-	{50,30},
-	{60,30}
+	{50,20},
+	{100,20},
+	{150,20},
+	{200,20},
+	{250,20},
+	{300,20}
 } };
 vector<Brick> brickVector;
+
 
 void draw(SDL_Renderer* renderer);
 bool update(InputState* inputState, SDL_Renderer* renderer);
@@ -63,6 +64,7 @@ int main(int argc, char** argv)
 		int x = brickCoordArray[i][0];
 		int y = brickCoordArray[i][1];
 		Brick brick = Brick(x, y);
+		/*Brick* pBrick = &brick;*/
 		brickVector.push_back(brick);
 		/*brickVector.push_back(new Brick(brickCoordArray[i][0], brickCoordArray[i][1]));*/
 	}
@@ -163,7 +165,10 @@ void draw(SDL_Renderer* renderer)
 	ballCountText.draw(renderer);
 	for (int i = 0; i < 6; i++)
 	{
-		brickVector.at(i).draw(renderer);
+		if (!brickVector[i].isDestroyed)
+		{
+			brickVector.at(i).draw(renderer);
+		}
 	}
 	ball.draw(renderer);
 	paddle.draw(renderer);
@@ -176,12 +181,16 @@ bool update(InputState* inputState, SDL_Renderer* renderer)
 
 	SDL_Rect rectBall = ball.toRect();
 	SDL_Rect rectPaddle = paddle.toRect();
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < brickVector.size(); i++)
 	{
 		SDL_Rect rectBrick = brickVector.at(i).toRect();
 		if (AABBCollision(&rectBall, &rectBrick))
 		{
-			ball.verticalBounce(rectBrick.y + rectBrick.h);
+			if (!brickVector[i].isDestroyed)
+			{
+				ball.verticalBounce(rectBrick.y + rectBrick.h);
+				brickVector[i].isDestroyed = true;
+			}
 		}
 	}
 

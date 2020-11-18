@@ -5,6 +5,7 @@ Brick::Brick(int pX, int pY)
 {
 	w = 30;
 	h = 30;
+	isDestroyed = false;
 }
 Brick::~Brick()
 {
