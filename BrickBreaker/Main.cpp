@@ -18,10 +18,11 @@ using std::string;
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 400;
 bool quit = false;
+bool winLose = false;
 int ballCount = 5;
 
 Ball ball = Ball(0, 100, 16, 16, 6, 6);
-Paddle paddle = Paddle(350, 350, 64, 16, 6);
+Paddle paddle = Paddle(350, 350, 64, 16, 10);
 InputState inputState = InputState();
 Text ballCountText = Text(50,50,20,50);
 
@@ -70,11 +71,11 @@ int main(int argc, char** argv)
 		/*brickVector.push_back(new Brick(brickCoordArray[i][0], brickCoordArray[i][1]));*/
 	}
 	//GAMELOOP
-	while (!quit)
+	while (!quit && !winLose)
 	{
-		update(&inputState, renderer);
-		quit = isWinLose();
 		quit = handleInput();
+		update(&inputState, renderer);
+		winLose = isWinLose();
 		draw(renderer);
 	}
 	close(window, renderer);
@@ -227,11 +228,11 @@ bool isWinLose()
 {
 	int destroyedBricks = 0;
 
-	if (ballCount == 0)
+	if (ballCount == -1)
 	{
 		return true;
 	}
-	else if (ballCount != 0)
+	else if (ballCount != -1)
 	{
 		for (int i = 0; i < brickVector.size(); i++)
 		{
