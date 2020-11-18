@@ -38,11 +38,12 @@ vector<Brick> brickVector;
 
 
 void draw(SDL_Renderer* renderer);
-bool update(InputState* inputState, SDL_Renderer* renderer);
+void update(InputState* inputState, SDL_Renderer* renderer);
 bool handleInput();
 void close(SDL_Window* window, SDL_Renderer* renderer);
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB);
 void load(SDL_Renderer* renderer);
+bool isWinLose();
 
 
 int main(int argc, char** argv)
@@ -73,6 +74,7 @@ int main(int argc, char** argv)
 	{
 		quit = handleInput();
 		update(&inputState, renderer);
+		quit = isWinLose();
 		draw(renderer);
 	}
 	close(window, renderer);
@@ -174,37 +176,36 @@ void draw(SDL_Renderer* renderer)
 	paddle.draw(renderer);
 	SDL_RenderPresent(renderer);
 }
-bool update(InputState* inputState, SDL_Renderer* renderer)
+void update(InputState* inputState, SDL_Renderer* renderer)
 {
 	ball.update(SCREEN_WIDTH, SCREEN_HEIGHT, inputState);
 	paddle.update(inputState, SCREEN_WIDTH);
 
 	SDL_Rect rectBall = ball.toRect();
 	SDL_Rect rectPaddle = paddle.toRect();
+
+	//BALL AND BRICK COLLISION
 	for (int i = 0; i < brickVector.size(); i++)
 	{
-		SDL_Rect rectBrick = brickVector.at(i).toRect();
+		SDL_Rect rectBrick = brickVector.at(i).toRect(); //create rect to check collision
 		if (AABBCollision(&rectBall, &rectBrick))
 		{
-			if (!brickVector[i].isDestroyed)
+			if (!brickVector[i].isDestroyed) // Only check for collision if brick is not already destroyed
 			{
 				ball.verticalBounce(rectBrick.y + rectBrick.h);
-				brickVector[i].isDestroyed = true;
+				brickVector[i].isDestroyed = true; //change bool when collision
 			}
 		}
 	}
 
+
+	//BALL AND PADDLE COLLISION
 	if (AABBCollision(&rectBall, &rectPaddle))
 	{
 		ball.verticalBounce(rectPaddle.y-rectBall.h);
 	}
-	if (ball.y > SCREEN_HEIGHT - ball.h)
+	if (ball.y > SCREEN_HEIGHT - ball.h) //If ball goes out of bottom screen, the ball count is decremented and ball is reset on paddle.
 	{
-		if (ballCount == 0)
-		{
-			quit = true;
-			return ballCount;
-		}
 		ball.reset(paddle.getX()+(paddle.getW()/2) - ball.w/2, paddle.getY()); //Ball is reset in position and has zero speed
 		ballCount--;
 		char newText[3]; // Buffer error if score gets to 100, change buffer size here, in text.h and text.cpp -> load()
@@ -221,4 +222,35 @@ void close(SDL_Window* window, SDL_Renderer* renderer)
 	Mix_Quit();
 	TTF_Quit();
 	SDL_Quit();
+}
+bool isWinLose()
+{
+	int destroyedBricks = 0;
+
+	if (ballCount == 0)
+	{
+		return true;
+	}
+	else if (ballCount != 0)
+	{
+		for (int i = 0; i < brickVector.size(); i++)
+		{
+			if (brickVector[i].isDestroyed)
+			{
+				destroyedBricks++;
+			}
+		}
+		if (destroyedBricks == brickVector.size())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
 }
