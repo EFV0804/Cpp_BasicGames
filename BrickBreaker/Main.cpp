@@ -72,9 +72,9 @@ int main(int argc, char** argv)
 	//GAMELOOP
 	while (!quit)
 	{
-		quit = handleInput();
 		update(&inputState, renderer);
 		quit = isWinLose();
+		quit = handleInput();
 		draw(renderer);
 	}
 	close(window, renderer);
