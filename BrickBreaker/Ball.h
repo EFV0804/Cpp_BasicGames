@@ -18,7 +18,7 @@ public:
 	bool isBallReset = false; // used in Main inputHandle()
 
 	//TESTING
-	void inverseSpeed(int& speed);
+	void reverseSpeed(int& speed);
 	int speedX;
 
 

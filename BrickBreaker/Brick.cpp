@@ -3,8 +3,8 @@
 Brick::Brick(int pX, int pY)
 	:x(pX), y(pY)
 {
-	w = 30;
-	h = 30;
+	w = 40;
+	h = 40;
 	isDestroyed = false;
 }
 Brick::~Brick()

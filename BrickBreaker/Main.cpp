@@ -15,26 +15,38 @@ using std::vector;
 using std::array;
 using std::string;
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 400;
+const int SCREEN_WIDTH = 600;
+const int SCREEN_HEIGHT = 800;
 bool quit = false;
 bool winLose = false;
 int ballCount = 5;
 
-Ball ball = Ball(0, 100, 16, 16, 6, 6);
-Paddle paddle = Paddle(350, 350, 200, 16, 10);
+Paddle paddle = Paddle(300, 730, 50, 16, 10);
+Ball ball = Ball(paddle.getX() + (paddle.getW() / 2) - ball.w / 2, paddle.getY(), 10, 10, 6, 6);
 InputState inputState = InputState();
 Text ballCountText = Text(50,50,20,50);
 
-array <array<int, 2>, 6> brickCoordArray =
+array <array<int, 2>, 17> brickCoordArray =
 { {
-	{50,20},
-	{100,20},
-	{150,20},
-	{200,20},
-	{250,20},
-	{300,20}
+	{280,70},
+	{110,120},
+	{160,120},
+	{210,120},
+	{260,120},
+	{310,120},
+	{360,120},
+	{410,120},
+	{460,120},
+	{510,120},
+	{310,170},
+	{360,170},
+	{410,170},
+	{460,170},
+	{390,220},
+	{440,220},
+	{490,220},
 } };
+
 vector<Brick> brickVector;
 
 
@@ -61,7 +73,7 @@ int main(int argc, char** argv)
 
 	//LOAD
 	load(renderer);
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 17; i++)
 	{
 		int x = brickCoordArray[i][0];
 		int y = brickCoordArray[i][1];
@@ -166,7 +178,7 @@ void draw(SDL_Renderer* renderer)
 
 	SDL_SetRenderDrawColor(renderer, 0XFF, 0XFF, 0XFF, 0XFF);
 	ballCountText.draw(renderer);
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 17; i++)
 	{
 		if (!brickVector[i].isDestroyed)
 		{
@@ -193,8 +205,29 @@ void update(InputState* inputState, SDL_Renderer* renderer)
 		{
 			if (!brickVector[i].isDestroyed) // Only check for collision if brick is not already destroyed
 			{
-				ball.verticalBounce(rectBrick.y + rectBrick.h);
-				brickVector[i].isDestroyed = true; //change bool when collision
+				if (!brickVector[i].isDestroyed) // Only check for collision if brick is not already destroyed
+				{
+					if (rectBall.x < rectBrick.x && rectBall.y + rectBall.h > rectBrick.y)//LEFT
+					{
+						ball.horizontalBounce(rectBrick.x - rectBall.w);
+						brickVector[i].isDestroyed = true;
+					}
+					else if (rectBall.x > rectBrick.x + rectBrick.w) //RIGHT
+					{
+						ball.horizontalBounce(rectBrick.x + rectBrick.w);
+						brickVector[i].isDestroyed = true;
+					}
+					else if (rectBall.y + rectBall.h > rectBrick.y + rectBrick.h) //BOTTOM
+					{
+						ball.verticalBounce(rectBrick.y + rectBrick.h);
+						brickVector[i].isDestroyed = true;
+					}
+					else if (rectBall.y < rectBrick.y && rectBall.x < rectBrick.x + rectBrick.w) //TOP
+					{
+						ball.verticalBounce(rectBrick.y - rectBall.h);
+						brickVector[i].isDestroyed = true;
+					}
+				}
 			}
 		}
 	}
@@ -212,7 +245,7 @@ void update(InputState* inputState, SDL_Renderer* renderer)
 			else if (rectBall.x < rectPaddle.x + (rectPaddle.w / 2))
 			{
 				ball.verticalBounce(rectPaddle.y - rectBall.h);
-				ball.inverseSpeed(ball.speedX);
+				ball.reverseSpeed(ball.speedX);
 			}
 		}
 		else if (ball.speedX < 0)
@@ -220,7 +253,7 @@ void update(InputState* inputState, SDL_Renderer* renderer)
 			if (rectBall.x > rectPaddle.x + (rectPaddle.w / 2))
 			{
 				ball.verticalBounce(rectPaddle.y - rectBall.h);
-				ball.inverseSpeed(ball.speedX);
+				ball.reverseSpeed(ball.speedX);
 			}
 			else if (rectBall.x < rectPaddle.x + (rectPaddle.w / 2))
 			{

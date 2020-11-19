@@ -62,7 +62,7 @@ void Ball::update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, InputState* i
 }
 void Ball::verticalBounce(int yReplace)
 {
-	inverseSpeed(speedY);
+	reverseSpeed(speedY);
 	y = yReplace;
 }
 void Ball::draw(SDL_Renderer* renderer)
@@ -71,11 +71,11 @@ void Ball::draw(SDL_Renderer* renderer)
 	SDL_RenderFillRect(renderer, &rect);
 }void Ball::horizontalBounce(int xReplace)
 {
-	inverseSpeed(speedX);
+	reverseSpeed(speedX);
 	x = xReplace;
 }
 
-void Ball::inverseSpeed(int& speed)
+void Ball::reverseSpeed(int& speed)
 {
 	speed *= -1;
 }
