@@ -6,10 +6,10 @@ using std::vector;
 class Farm
 {
 private:
-	vector<Tamagochi*> tamagochis;
 
 public:
 	Farm();
-	void add(Tamagochi* tamagochi);
+	void add(Tamagochi tamagochi);
 	void rollCall();
+	vector<Tamagochi> tamagochis;
 };
