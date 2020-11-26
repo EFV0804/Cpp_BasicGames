@@ -27,7 +27,7 @@ void Text::changeText(SDL_Renderer* renderer, const char* newText)
 	}
 	surface = TTF_RenderText_Solid(font, newText, color); //Creates a surface based on loaded font, text, and color
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_FreeSurface(surface);
+	SDL_FreeSurface(surface); //delete surface once texture is created because it's useless now
 }
 void Text::draw(SDL_Renderer* renderer)
 {

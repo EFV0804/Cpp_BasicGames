@@ -22,10 +22,11 @@ bool winLose = false;
 int ballCount = 5;
 
 Paddle paddle = Paddle(300, 730, 50, 16, 10);
-Ball ball = Ball(paddle.getX() + (paddle.getW() / 2) - ball.w / 2, paddle.getY(), 10, 10, 6, 6);
+Ball ball = Ball(paddle.getX() + (paddle.getW() / 2) - 5, (paddle.getY() - 10), 10, 10, 0, 0);
 InputState inputState = InputState();
 Text ballCountText = Text(50,50,20,50);
 
+//Array used to store brick coordinates
 array <array<int, 2>, 17> brickCoordArray =
 { {
 	{280,70},
@@ -47,6 +48,7 @@ array <array<int, 2>, 17> brickCoordArray =
 	{490,220},
 } };
 
+//Vector used to store the brick instances created using brick coordinates from array
 vector<Brick> brickVector;
 
 
@@ -73,15 +75,7 @@ int main(int argc, char** argv)
 
 	//LOAD
 	load(renderer);
-	for (int i = 0; i < 17; i++)
-	{
-		int x = brickCoordArray[i][0];
-		int y = brickCoordArray[i][1];
-		Brick brick = Brick(x, y);
-		/*Brick* pBrick = &brick;*/
-		brickVector.push_back(brick);
-		/*brickVector.push_back(new Brick(brickCoordArray[i][0], brickCoordArray[i][1]));*/
-	}
+
 	//GAMELOOP
 	while (!quit && !winLose)
 	{
@@ -90,12 +84,24 @@ int main(int argc, char** argv)
 		winLose = isWinLose();
 		draw(renderer);
 	}
+
 	close(window, renderer);
+
 	return 0;
 }
 void load(SDL_Renderer* renderer)
 {
 	ballCountText.load(renderer, "5");
+
+	//LOAD BRICKS (not in a single line this time)
+
+	for (int i = 0; i < brickCoordArray.size(); i++)
+	{
+		int x = brickCoordArray[i][0];
+		int y = brickCoordArray[i][1];
+		Brick brick = Brick(x, y);
+		brickVector.push_back(brick);
+	}
 }
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB)
 {
@@ -109,6 +115,32 @@ bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB)
 	int xMaxB = rectB->x + rectB->w;
 	return !(xMinA > xMaxB || xMaxA < xMinB || yMinA > yMaxB || yMaxA < yMinB);
 }
+int AABBSidesCollision(SDL_Rect* rectA, SDL_Rect* rectB, Ball* ball) //Returns 0 for horizontal collision, 1 for vertical
+{
+
+	int yMinB = rectB->y;
+	int yMaxB = rectB->y + rectB->h;
+	int yMinA = rectA->y;
+	int yMaxA = rectA->y + rectA->h;
+	int xMinA = rectA->x;
+	int xMaxA = rectA->x + rectA->w;
+	int xMinB = rectB->x;
+	int xMaxB = rectB->x + rectB->w;
+	int speedXA = ball->getSpeedX();
+	int speedYA = ball->getSpeedY();
+
+	//Horizontal
+	if (!(xMaxA + speedXA < xMinB || xMinA + speedXA > xMaxB || yMaxA < yMinB || yMinA > yMaxB))
+	{
+		return 0;
+	}
+	//Vertical
+	if (!(xMaxA < xMinB || xMinA > xMaxB || yMaxA + speedYA < yMinB || yMinA + speedYA > yMaxB))
+	{
+		return 1;
+	}
+	return 2;
+}
 bool handleInput()
 {
 	SDL_Event e;
@@ -116,7 +148,6 @@ bool handleInput()
 	{
 		if (e.type == SDL_KEYDOWN)
 		{
-			// Player 1 inputs
 			if (e.key.keysym.sym == SDLK_q)
 			{
 				inputState.paddleLeft = true;
@@ -135,15 +166,6 @@ bool handleInput()
 					ball.isBallReset = false;
 				}
 			}
-			////Player 2 inputs (needs Paddle::update() in main update() to work)
-			//if (e.key.keysym.sym == SDLK_i)
-			//{
-			//	inputStateRight.paddleUp = true;
-			//}
-			//else if (e.key.keysym.sym == SDLK_j)
-			//{
-			//	inputStateRight.paddleDown = true;
-			//}
 		}
 		else if (e.type == SDL_KEYUP)
 		{
@@ -155,14 +177,6 @@ bool handleInput()
 			{
 				inputState.paddleRight = false;
 			}
-			//if (e.key.keysym.sym == SDLK_i)
-			//{
-			//	inputStateRight.paddleUp = false;
-			//}
-			//else if (e.key.keysym.sym == SDLK_j)
-			//{
-			//	inputStateRight.paddleDown = false;
-			//}
 		}
 		else if (e.type == SDL_QUIT)
 		{
@@ -178,13 +192,16 @@ void draw(SDL_Renderer* renderer)
 
 	SDL_SetRenderDrawColor(renderer, 0XFF, 0XFF, 0XFF, 0XFF);
 	ballCountText.draw(renderer);
-	for (int i = 0; i < 17; i++)
+
+	// DRAW BRICK VECTOR
+	for (int i = 0; i < brickCoordArray.size(); i++)
 	{
-		if (!brickVector[i].isDestroyed)
+		if (!brickVector[i].isDestroyed) //doesn't draw if brick is destroyed
 		{
 			brickVector.at(i).draw(renderer);
 		}
 	}
+
 	ball.draw(renderer);
 	paddle.draw(renderer);
 	SDL_RenderPresent(renderer);
@@ -201,73 +218,42 @@ void update(InputState* inputState, SDL_Renderer* renderer)
 	for (int i = 0; i < brickVector.size(); i++)
 	{
 		SDL_Rect rectBrick = brickVector.at(i).toRect(); //create rect to check collision
-		if (AABBCollision(&rectBall, &rectBrick))
+
+		//Int to store AABBSidesCollision() return value, 0 = horizontal, 1 = vertical
+		int brickCollisionDirection = AABBSidesCollision(&rectBall, &rectBrick, &ball);
+		
+		if (!brickVector[i].isDestroyed) // Only check for collision if brick is not already destroyed
 		{
-			if (!brickVector[i].isDestroyed) // Only check for collision if brick is not already destroyed
+			if (brickCollisionDirection == 0)
 			{
-				if (!brickVector[i].isDestroyed) // Only check for collision if brick is not already destroyed
-				{
-					if (rectBall.x < rectBrick.x && rectBall.y + rectBall.h > rectBrick.y)//LEFT
-					{
-						ball.horizontalBounce(rectBrick.x - rectBall.w);
-						brickVector[i].isDestroyed = true;
-					}
-					else if (rectBall.x > rectBrick.x + rectBrick.w) //RIGHT
-					{
-						ball.horizontalBounce(rectBrick.x + rectBrick.w);
-						brickVector[i].isDestroyed = true;
-					}
-					else if (rectBall.y + rectBall.h > rectBrick.y + rectBrick.h) //BOTTOM
-					{
-						ball.verticalBounce(rectBrick.y + rectBrick.h);
-						brickVector[i].isDestroyed = true;
-					}
-					else if (rectBall.y < rectBrick.y && rectBall.x < rectBrick.x + rectBrick.w) //TOP
-					{
-						ball.verticalBounce(rectBrick.y - rectBall.h);
-						brickVector[i].isDestroyed = true;
-					}
-				}
+				ball.horizontalBounce();
+				brickVector[i].isDestroyed = true;
+			}
+			if (brickCollisionDirection == 1)
+			{
+				ball.verticalBounce();
+				brickVector[i].isDestroyed = true;
 			}
 		}
 	}
-
 
 	//BALL AND PADDLE COLLISION
 	if (AABBCollision(&rectBall, &rectPaddle))
 	{
-		if (ball.speedX > 0)
-		{
-			if (rectBall.x > rectPaddle.x + (rectPaddle.w / 2))
-			{
-				ball.verticalBounce(rectPaddle.y - rectBall.h);
-			}
-			else if (rectBall.x < rectPaddle.x + (rectPaddle.w / 2))
-			{
-				ball.verticalBounce(rectPaddle.y - rectBall.h);
-				ball.reverseSpeed(ball.speedX);
-			}
-		}
-		else if (ball.speedX < 0)
-		{
-			if (rectBall.x > rectPaddle.x + (rectPaddle.w / 2))
-			{
-				ball.verticalBounce(rectPaddle.y - rectBall.h);
-				ball.reverseSpeed(ball.speedX);
-			}
-			else if (rectBall.x < rectPaddle.x + (rectPaddle.w / 2))
-			{
-				ball.verticalBounce(rectPaddle.y - rectBall.h);
-			}
-		}
+		ball.verticalBounce();
+		ball.setY(rectPaddle.y - rectBall.h);
 	}
-	if (ball.y > SCREEN_HEIGHT - ball.h) //If ball goes out of bottom screen, the ball count is decremented and ball is reset on paddle.
+
+	//BALL BOTTOM SCREEN COLLISION
+	if (ball.getY() > SCREEN_HEIGHT - ball.getH()) //If ball goes out of bottom screen, the ball count is decremented and ball is reset on paddle.
 	{
-		ball.reset(paddle.getX()+(paddle.getW()/2) - ball.w/2, paddle.getY()); //Ball is reset in position and has zero speed
+		ball.reset(paddle.getX()+(paddle.getW()/2) - ball.getW()/2, (paddle.getY() - ball.getH())); //Ball is reset in position and has zero speed
 		ballCount--;
+
 		char newText[3]; // Buffer error if score gets to 100, change buffer size here, in text.h and text.cpp -> load()
 		sprintf_s(newText, "%d", ballCount);
 		ballCountText.changeText(renderer, newText);
+
 		ball.isBallReset = true; //Sets bool to true in order to triger conditional in inputHandle()
 	}
 }

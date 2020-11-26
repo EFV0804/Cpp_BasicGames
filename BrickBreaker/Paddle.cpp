@@ -6,13 +6,6 @@ Paddle::Paddle(int pX, int pY, int pW, int pH, int pSpeedX)
 {
 
 }
-//Paddle::Paddle(const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
-//{
-//	x = SCREEN_WIDTH / 2 - w / 2;
-//	y = SCREEN_HEIGHT - h;
-//	w = 50;
-//	h = 20;
-//}
 Paddle::~Paddle()
 {
 
@@ -21,18 +14,6 @@ SDL_Rect Paddle::toRect()
 {
 	SDL_Rect rect = { x,y,w,h };
 	return rect;
-}
-const int Paddle::getX()
-{
-	return x;
-}
-const int Paddle::getW()
-{
-	return w;
-}
-const int Paddle::getY()
-{
-	return y;
 }
 void Paddle::draw(SDL_Renderer* renderer)
 {

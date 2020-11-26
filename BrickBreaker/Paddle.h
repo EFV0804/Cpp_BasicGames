@@ -7,15 +7,20 @@ class Paddle
 public:
 	Paddle(int pX, int pY, int pW, int pH, int pSpeedX);
 	~Paddle();
+
+	//Creating rectangle to draw to screen
 	SDL_Rect toRect();
-	void update(InputState* inputState, const int SCREEN_WIDTH);
 	void draw(SDL_Renderer* renderer);
+
+	//Getters
+	const int getX() {return x;}
+	const int getY() {return y;}
+	const int getW() {return w;}
+
+	//Movement
+	void update(InputState* inputState, const int SCREEN_WIDTH);
 	void moveLeft();
 	void moveRight(const int SCREEN_WIDTH);
-	const int getX(); //unavailable in Ball.cpp
-	const int getY();//unavailable in Ball.cpp
-	const int getW();
-
 
 private:
 	int y;
