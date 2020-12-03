@@ -9,7 +9,7 @@ Brick::Brick(int pX, int pY)
 }
 Brick::~Brick()
 {
-
+	
 }
 SDL_Rect Brick::toRect()
 {

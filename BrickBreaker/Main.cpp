@@ -11,6 +11,9 @@
 #include<cstdio>
 #include<vector>
 
+
+
+
 using std::vector;
 using std::array;
 using std::string;
@@ -49,7 +52,7 @@ array <array<int, 2>, 17> brickCoordArray =
 } };
 
 //Vector used to store the brick instances created using brick coordinates from array
-vector<Brick> brickVector;
+vector<Brick*> brickVector;
 
 
 void draw(SDL_Renderer* renderer);
@@ -58,6 +61,7 @@ bool handleInput();
 void close(SDL_Window* window, SDL_Renderer* renderer);
 bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB);
 void load(SDL_Renderer* renderer);
+void unload();
 bool isWinLose();
 
 
@@ -75,10 +79,13 @@ int main(int argc, char** argv)
 
 	//LOAD
 	load(renderer);
+	unload();
+
 
 	//GAMELOOP
 	while (!quit && !winLose)
 	{
+
 		quit = handleInput();
 		update(&inputState, renderer);
 		winLose = isWinLose();
@@ -88,6 +95,13 @@ int main(int argc, char** argv)
 	close(window, renderer);
 
 	return 0;
+}
+void unload()
+{
+	while(!brickVector.empty())
+	{
+		delete brickVector.back();
+	}
 }
 void load(SDL_Renderer* renderer)
 {
@@ -99,7 +113,7 @@ void load(SDL_Renderer* renderer)
 	{
 		int x = brickCoordArray[i][0];
 		int y = brickCoordArray[i][1];
-		Brick brick = Brick(x, y);
+		Brick* brick = new Brick(x, y);
 		brickVector.push_back(brick);
 	}
 }
@@ -196,9 +210,9 @@ void draw(SDL_Renderer* renderer)
 	// DRAW BRICK VECTOR
 	for (int i = 0; i < brickCoordArray.size(); i++)
 	{
-		if (!brickVector[i].isDestroyed) //doesn't draw if brick is destroyed
+		if (!brickVector[i]->isDestroyed) //doesn't draw if brick is destroyed
 		{
-			brickVector.at(i).draw(renderer);
+			brickVector.at(i)->draw(renderer);
 		}
 	}
 
@@ -217,22 +231,22 @@ void update(InputState* inputState, SDL_Renderer* renderer)
 	//BALL AND BRICK COLLISION
 	for (int i = 0; i < brickVector.size(); i++)
 	{
-		SDL_Rect rectBrick = brickVector.at(i).toRect(); //create rect to check collision
+		SDL_Rect rectBrick = brickVector.at(i)->toRect(); //create rect to check collision
 
 		//Int to store AABBSidesCollision() return value, 0 = horizontal, 1 = vertical
 		int brickCollisionDirection = AABBSidesCollision(&rectBall, &rectBrick, &ball);
 		
-		if (!brickVector[i].isDestroyed) // Only check for collision if brick is not already destroyed
+		if (!brickVector[i]->isDestroyed) // Only check for collision if brick is not already destroyed
 		{
 			if (brickCollisionDirection == 0)
 			{
 				ball.horizontalBounce();
-				brickVector[i].isDestroyed = true;
+				brickVector[i]->isDestroyed = true;
 			}
 			if (brickCollisionDirection == 1)
 			{
 				ball.verticalBounce();
-				brickVector[i].isDestroyed = true;
+				brickVector[i]->isDestroyed = true;
 			}
 		}
 	}
@@ -278,7 +292,7 @@ bool isWinLose()
 	{
 		for (int i = 0; i < brickVector.size(); i++)
 		{
-			if (brickVector[i].isDestroyed)
+			if (brickVector[i]->isDestroyed)
 			{
 				destroyedBricks++;
 			}
