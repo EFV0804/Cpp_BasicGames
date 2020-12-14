@@ -16,12 +16,12 @@ SDL_Rect Brick::toRect()
 	SDL_Rect rect = { x,y,w,h };
 	return rect;
 }
-void Brick::draw(SDL_Renderer* renderer)
+void Brick::draw(Renderer* renderer)
 {
 	SDL_Rect rect = toRect();
-	SDL_RenderFillRect(renderer, &rect);
+	renderer->drawRect(rect);
 }
-void Brick::update()
-{
-
-}
+//void Brick::update()
+//{
+//
+//}

@@ -29,8 +29,13 @@ void Text::changeText(SDL_Renderer* renderer, const char* newText)
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface); //delete surface once texture is created because it's useless now
 }
-void Text::draw(SDL_Renderer* renderer)
+void Text::draw(Renderer* renderer)
 {
-	SDL_Rect rect = { x, y, w, h };
-	SDL_RenderCopy(renderer, texture, nullptr, &rect);
+	SDL_Rect rect = toRect();
+	SDL_RenderCopy(renderer->toSDLRenderer(), texture, nullptr, &rect);
+}
+SDL_Rect Text::toRect()
+{
+	SDL_Rect rect = { x,y,w,h };
+	return rect;
 }

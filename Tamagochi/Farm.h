@@ -9,7 +9,7 @@ private:
 
 public:
 	Farm();
-	void add(Tamagochi tamagochi);
+	void add(Tamagochi* tamagochi);
 	void rollCall();
-	vector<Tamagochi> tamagochis;
+	vector<Tamagochi*> tamagochis;
 };

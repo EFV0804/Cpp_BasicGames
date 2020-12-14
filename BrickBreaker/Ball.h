@@ -1,16 +1,18 @@
 #pragma once
 #include<SDL.h>
 #include"Paddle.h"
+#include"Renderer.h"
 
 class Ball
 {
 public:
+	Ball();
 	Ball(int pX, int pY, int pW, int pH, int pSpeedX, int pSpeedY);
 	~Ball();
 
 	//Create rectagle to draw on screen
 	SDL_Rect toRect();
-	void draw(SDL_Renderer* renderer);
+	void draw(Renderer* renderer);
 
 	//Getters
 	int getX() { return x; }

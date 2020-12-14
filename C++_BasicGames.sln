@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pong", "Pong\Pong.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrickBreaker", "BrickBreaker\BrickBreaker.vcxproj", "{4E63712B-3D83-4629-A305-A01495A6257A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "adventureGame", "adventureGame\adventureGame.vcxproj", "{CFB27066-F472-47E5-BB55-A3E30077A995}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{4E63712B-3D83-4629-A305-A01495A6257A}.Release|x64.Build.0 = Release|x64
 		{4E63712B-3D83-4629-A305-A01495A6257A}.Release|x86.ActiveCfg = Release|Win32
 		{4E63712B-3D83-4629-A305-A01495A6257A}.Release|x86.Build.0 = Release|Win32
+		{CFB27066-F472-47E5-BB55-A3E30077A995}.Debug|x64.ActiveCfg = Debug|x64
+		{CFB27066-F472-47E5-BB55-A3E30077A995}.Debug|x64.Build.0 = Debug|x64
+		{CFB27066-F472-47E5-BB55-A3E30077A995}.Debug|x86.ActiveCfg = Debug|Win32
+		{CFB27066-F472-47E5-BB55-A3E30077A995}.Debug|x86.Build.0 = Debug|Win32
+		{CFB27066-F472-47E5-BB55-A3E30077A995}.Release|x64.ActiveCfg = Release|x64
+		{CFB27066-F472-47E5-BB55-A3E30077A995}.Release|x64.Build.0 = Release|x64
+		{CFB27066-F472-47E5-BB55-A3E30077A995}.Release|x86.ActiveCfg = Release|Win32
+		{CFB27066-F472-47E5-BB55-A3E30077A995}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

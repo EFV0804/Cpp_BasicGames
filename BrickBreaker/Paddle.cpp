@@ -1,6 +1,7 @@
 #include"Paddle.h"
 
-
+Paddle::Paddle()
+{}
 Paddle::Paddle(int pX, int pY, int pW, int pH, int pSpeedX)
 	:x(pX),y(pY),w(pW),h(pH), speedX(pSpeedX)
 {
@@ -15,10 +16,10 @@ SDL_Rect Paddle::toRect()
 	SDL_Rect rect = { x,y,w,h };
 	return rect;
 }
-void Paddle::draw(SDL_Renderer* renderer)
+void Paddle::draw(Renderer* renderer) //in renderer
 {
 	SDL_Rect rect = toRect();
-	SDL_RenderFillRect(renderer, &rect);
+	renderer->drawRect(rect);
 }
 void Paddle::moveLeft()
 {
@@ -36,13 +37,13 @@ void Paddle::moveRight(const int SCREEN_WIDTH)
 	x = SCREEN_WIDTH - w;
 	}
 }
-void Paddle::update(InputState* inputState, const int SCREEN_WIDTH)
+void Paddle::update(InputState& inputState, const int SCREEN_WIDTH) //include in scene->udate()
 {
-	if (inputState->paddleLeft)
+	if (inputState.paddleLeft)
 	{
 		moveLeft();
 	}
-	else if (inputState->paddleRight)
+	else if (inputState.paddleRight)
 	{
 		moveRight(SCREEN_WIDTH);
 	}

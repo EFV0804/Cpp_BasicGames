@@ -1,14 +1,14 @@
 #pragma once
 #include<SDL.h>
-
+#include"Renderer.h"
 class Brick
 {
 public:
 	Brick(int pX, int pY);
 	~Brick();
 	SDL_Rect toRect();
-	void draw(SDL_Renderer* renderer);
-	void update();
+	void draw(Renderer* renderer);
+	//void update();
 	bool isDestroyed;
 
 private:

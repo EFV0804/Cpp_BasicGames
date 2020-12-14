@@ -1,6 +1,7 @@
 #pragma once
 #include<SDL.h>
 #include<SDL_ttf.h>
+#include"Renderer.h"
 
 class Text
 {
@@ -10,7 +11,9 @@ public:
 	~Text();
 	void load(SDL_Renderer* renderer, const char newText[3]);
 	void changeText(SDL_Renderer* renderer, const char* newText);
-	void draw(SDL_Renderer* renderer);
+	void draw(Renderer* renderer);
+	SDL_Texture* getTex() { return texture; }
+	SDL_Rect toRect();
 private:
 	int x;
 	int y;

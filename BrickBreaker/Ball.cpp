@@ -2,6 +2,8 @@
 #include"Paddle.h"
 #include<cstdio> 
 
+Ball::Ball()
+{}
 Ball::Ball(int pX, int pY, int pW, int pH, int pSpeedX, int pSpeedY)
 	:x(pX), y(pY), w(pW), h(pH), speedX(pSpeedX), speedY(pSpeedY)
 {
@@ -57,12 +59,12 @@ void Ball::update(const int SCREEN_WIDTH, const int SCREEN_HEIGHT, InputState* i
 		verticalBounce();
 	}
 
-	//FOR BOTTOM SCREEN EDGE SEE --> Main -> update()
+	//FOR BOTTOM SCREEN EDGE SEE --> scene -> update()
 }
-void Ball::draw(SDL_Renderer* renderer)
+void Ball::draw(Renderer* renderer)
 {
 	SDL_Rect rect = toRect();
-	SDL_RenderFillRect(renderer, &rect);
+	renderer->drawRect(rect);
 }
 void Ball::horizontalBounce()
 {

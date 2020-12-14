@@ -12,9 +12,12 @@ int main(int argc, char** argv)
 {
 	bool quit = false;
 	string playerChoice;
-
+	string chosenName;
+	string* pChosenName = nullptr;
+	pChosenName = &chosenName;
 
 	//Tamagochis creation
+
 	Tamagochi tamagochiA = Tamagochi("Richard");
 	Tamagochi tamagochiB = Tamagochi("Willy");
 
@@ -23,11 +26,11 @@ int main(int argc, char** argv)
 	pTamagochiA = &tamagochiA;
 	Tamagochi* pTamagochiB = nullptr;
 	pTamagochiB = &tamagochiB;
-
+	Tamagochi* pTamagochiC = nullptr;
 
 	Farm farmA = Farm();
-	farmA.add(tamagochiA);
-	farmA.add(tamagochiB);
+	farmA.add(pTamagochiA);
+	farmA.add(pTamagochiB);
 
 	cout << "Your Tamagochi farm contains " << farmA.tamagochis.size() << " tamgochis. Here are their names: " << endl;
 	farmA.rollCall();
@@ -38,7 +41,7 @@ int main(int argc, char** argv)
 
 	while (!quit)
 	{
-
+		farmA.rollCall();
 		interactionChoices(playerChoice);
 		if (playerChoice == "listen")
 		{
@@ -47,9 +50,9 @@ int main(int argc, char** argv)
 			cin >> playerChoice;
 			for (int i = 0; i < farmA.tamagochis.size(); i++)
 			{
-				if (playerChoice == farmA.tamagochis.at(i).name)
+				if (playerChoice == farmA.tamagochis.at(i)->name)
 				{
-					farmA.tamagochis.at(i).talk();
+					farmA.tamagochis.at(i)->talk();
 				}
 			}
 		}
@@ -60,22 +63,22 @@ int main(int argc, char** argv)
 			cin >> playerChoice;
 			for (int i = 0; i < farmA.tamagochis.size(); i++)
 			{
-				if (playerChoice == farmA.tamagochis.at(i).name)
+				if (playerChoice == farmA.tamagochis.at(i)->name)
 				{
-					farmA.tamagochis.at(i).eat();
+					farmA.tamagochis.at(i)->eat();
 				}
 			}
 		}
 		else if (playerChoice == "play")
 		{
-			cout << "Which Tamagochi do you want to listen to? Please type in your answer." << endl;
+			cout << "Which Tamagochi do you want to play with? Please type in your answer." << endl;
 			farmA.rollCall();
 			cin >> playerChoice;
 			for (int i = 0; i < farmA.tamagochis.size(); i++)
 			{
-				if (playerChoice == farmA.tamagochis.at(i).name)
+				if (playerChoice == farmA.tamagochis.at(i)->name)
 				{
-					farmA.tamagochis.at(i).play();
+					farmA.tamagochis.at(i)->play();
 				}
 			}
 		}
@@ -87,11 +90,16 @@ int main(int argc, char** argv)
 		else if (playerChoice == "create")
 		{
 			cout << "Please enter a name for your new Tamagochi." << endl;
-			cin >> playerChoice;
-			Tamagochi tamagochiC = Tamagochi(playerChoice); //Should probably add dynamic name for the object, but it seems to work like this.
-			farmA.add(tamagochiC);
+			cin >> chosenName;
+
+			Tamagochi tamagochiC = Tamagochi(chosenName); //Should probably add dynamic name for the object, but it seems to work like this.
+			Tamagochi* pTamagochiC = nullptr;
+			pTamagochiC = &tamagochiC;
+			farmA.add(pTamagochiC);
+
 			cout << "A new Tamagochi named " << tamagochiC.name << " has been added to your farm." << endl;
 			cout << "Your farm now contains "<< farmA.tamagochis.size() << " tamgochis. Here are their names: " << endl;
+
 			farmA.rollCall();
 		}
 		else if (playerChoice == "quit")

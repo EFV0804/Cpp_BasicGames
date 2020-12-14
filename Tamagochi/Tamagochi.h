@@ -20,7 +20,7 @@ private:
 public:
 	string name;
 	string getName() const { return name; }
-	Tamagochi(const string& pName); //constructor
+	Tamagochi(string pName); //constructor
 	void talk();
 	void play();
 	void eat();
