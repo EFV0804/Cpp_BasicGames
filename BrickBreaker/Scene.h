@@ -10,16 +10,19 @@
 #include<SDL.h>
 #include<vector>
 #include<array>
+#include<string>
+#include<fstream>
 #include<SDL_ttf.h>
 #include<SDL_mixer.h>
 
 using std::vector;
 using std::array;
+using std::string;
 
 class Scene
 {
 public:
-	Scene();
+	Scene(string path);
 	~Scene();
 	bool initialize();
 	void load();
@@ -31,31 +34,19 @@ public:
 	void draw();
 	void close();
 
-private:
+
+	vector<Brick*> brickVector;
 	int ballCount = 5;
+
+private:
 	Text ballCountText;
 	bool winLose = false;
-	array <array<int, 2>, 17> brickCoordArray =
-	{ {
-		{280,70},
-		{110,120},
-		{160,120},
-		{210,120},
-		{260,120},
-		{310,120},
-		{360,120},
-		{410,120},
-		{460,120},
-		{510,120},
-		{310,170},
-		{360,170},
-		{410,170},
-		{460,170},
-		{390,220},
-		{440,220},
-		{490,220},
-	} };
-	vector<Brick*> brickVector;
+	string path;
+	vector<int> brickCoordVec;
+	//array <array<int, 2>, 100> brickCoordArray =
+	//{ {
+	//} };
+	
 	Paddle paddle;
 	Ball ball;
 	InputState inputState; //scene

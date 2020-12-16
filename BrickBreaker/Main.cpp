@@ -26,7 +26,7 @@ void close(); //renderer & window
 
 int main(int argc, char** argv)
 {
-	Scene scene = Scene();
+	Scene scene = Scene("D:\\ARTFX\\3D3-Prog\\BLAISE_CAZALET_G\\C++\\Exercice\\cock_Coord.txt");
 
 	//LOAD
 	scene.initialize();

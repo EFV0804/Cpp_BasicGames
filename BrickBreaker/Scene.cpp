@@ -1,7 +1,8 @@
 #include"Scene.h"
 
-Scene::Scene()
+Scene::Scene(string pathP)
 {
+	path = pathP;
 }
 Scene::~Scene()
 {
@@ -64,13 +65,37 @@ void Scene::load()
 	ball = Ball(paddle.getX() + (paddle.getW() / 2) - 5, (paddle.getY() - 10), 10, 10, 0, 0);
 	ballCountText = Text(50, 50, 20, 50);
 	ballCountText.load(renderer.toSDLRenderer(), "5");
+	
+	//LOAD BRICK COORDINATES
+	//1.create file stream and string unit
+	string line;
+	std::ifstream brickCoordData;
+	brickCoordData.open(path);
 
-	//LOAD BRICKS (not in a single line this time)
 
-	for (int i = 0; i < brickCoordArray.size(); i++)
+			//SET VECTOR SIZE
+			//2. read first line until delimiter "=", if line string is "size", read the next line, convert to int and set vector size
+	getline(brickCoordData, line, '=');
+	if (line == "size")
 	{
-		int x = brickCoordArray[i][0];
-		int y = brickCoordArray[i][1];
+		getline(brickCoordData, line, ',');
+		brickCoordVec.resize(atoi(line.c_str()));
+	}
+
+			//LOAD COORDINATES INTO VECTOR
+			//3.For every slot in vec, get a string up to every ",", convert to string and store in vec
+	for (int i = 0; i < brickCoordVec.size(); i++)
+	{
+		getline(brickCoordData, line, ',');
+		brickCoordVec.at(i) = atoi(line.c_str());
+	}
+
+	//LOAD BRICKS
+	for (int i = 0; i < brickCoordVec.size(); i++)
+	{
+		int x = brickCoordVec.at(i);
+		i++;
+		int y = brickCoordVec.at(i);
 		Brick* brick = new Brick(x, y);
 		brickVector.push_back(brick);
 	}
@@ -208,7 +233,7 @@ void Scene::draw()
 	ball.draw(&renderer);
 	ballCountText.draw(&renderer);
 	// DRAW BRICK VECTOR
-	for (int i = 0; i < brickCoordArray.size(); i++)
+	for (int i = 0; i < brickVector.size(); i++)
 	{
 		if (!brickVector[i]->isDestroyed) //doesn't draw if brick is destroyed
 		{
