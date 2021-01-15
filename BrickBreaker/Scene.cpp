@@ -8,19 +8,19 @@ Scene::~Scene()
 {
 
 }
-bool Scene::initialize()
-{
-
-	TTF_Init();
-	Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
-	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-
-
-	bool isWindowInit = window.initialize();
-	bool isRendererInit = renderer.initialize(window);
-
-	return isWindowInit && isRendererInit;
-}
+//bool Scene::initialize()
+//{
+//
+//	TTF_Init();
+//	Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
+//	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+//
+//
+//	bool isWindowInit = window.initialize();
+//	bool isRendererInit = renderer.initialize(window);
+//
+//	return isWindowInit && isRendererInit;
+//}
 bool Scene::AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB)
 {
 	int yMinB = rectB->y;
@@ -195,37 +195,37 @@ bool Scene::handleInput()
 	}
 	return false;
 }
-bool Scene::isWinLose()
-{
-	int destroyedBricks = 0;
-
-	if (ballCount == -1)
-	{
-		return true;
-	}
-	else if (ballCount != -1)
-	{
-		for (int i = 0; i < brickVector.size(); i++)
-		{
-			if (brickVector[i]->isDestroyed)
-			{
-				destroyedBricks++;
-			}
-		}
-		if (destroyedBricks == brickVector.size())
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		return false;
-	}
-}
+//bool Scene::isWinLose()
+//{
+//	int destroyedBricks = 0;
+//
+//	if (ballCount == -1)
+//	{
+//		return true;
+//	}
+//	else if (ballCount != -1)
+//	{
+//		for (int i = 0; i < brickVector.size(); i++)
+//		{
+//			if (brickVector[i]->isDestroyed)
+//			{
+//				destroyedBricks++;
+//			}
+//		}
+//		if (destroyedBricks == brickVector.size())
+//		{
+//			return true;
+//		}
+//		else
+//		{
+//			return false;
+//		}
+//	}
+//	else
+//	{
+//		return false;
+//	}
+//}
 void Scene::draw()
 {
 	renderer.beginDraw();
@@ -242,12 +242,19 @@ void Scene::draw()
 	}
 	renderer.endDraw();
 }
-void Scene::close()
+//void Scene::close()
+//{
+//	renderer.close();
+//	window.close();
+//	Mix_CloseAudio();
+//	Mix_Quit();
+//	TTF_Quit();
+//	SDL_Quit();
+//}
+void Scene::unload()
 {
-	renderer.close();
-	window.close();
-	Mix_CloseAudio();
-	Mix_Quit();
-	TTF_Quit();
-	SDL_Quit();
+	for (auto b : brickVector)
+	{
+		delete b;
+	}
 }

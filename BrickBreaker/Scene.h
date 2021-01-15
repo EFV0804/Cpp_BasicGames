@@ -24,20 +24,23 @@ class Scene
 public:
 	Scene(string path);
 	~Scene();
-	bool initialize();
+	//bool initialize();
 	void load();
 	void update();
 	bool handleInput();
-	bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB); //scene
-	int AABBSidesCollision(SDL_Rect* rectA, SDL_Rect* rectB, Ball* ball); //scene
-	bool isWinLose();
+	bool AABBCollision(SDL_Rect* rectA, SDL_Rect* rectB);
+	int AABBSidesCollision(SDL_Rect* rectA, SDL_Rect* rectB, Ball* ball);
+	//bool isWinLose();
 	void draw();
-	void close();
+	//void close();
+	void unload();
 
 
 	vector<Brick*> brickVector;
 	int ballCount = 5;
-
+	Paddle paddle;
+	Ball ball;
+	InputState inputState;
 private:
 	Text ballCountText;
 	bool winLose = false;
@@ -47,9 +50,7 @@ private:
 	//{ {
 	//} };
 	
-	Paddle paddle;
-	Ball ball;
-	InputState inputState; //scene
+
 	Renderer renderer;
 	Window window;
 	/*BrickLayout brickLayout;*/
